@@ -1,0 +1,276 @@
+{
+  "skills": [
+    {
+      "group": "accessibility",
+      "name": "a11y-fix",
+      "description": "Remediate WCAG 2.1/2.2 Level AA violations found by a11y-scan/a11y-review — semantics, names/roles/state, keyboard, focus, contrast — with the minimal correct change, preferring native elements over ARIA. WCAG-only; verifies the fix."
+    },
+    {
+      "group": "accessibility",
+      "name": "a11y-review",
+      "description": "Deep, mode-based accessibility review of a live page beyond automated scanning — interactive widgets (keyboard/ARIA/focus), color contrast, color-only meaning, link purpose, display modes (dark/high-contrast/forced-colors), and responsive viewports. Uses Playwright + axe. WCAG 2.1/2.2 AA."
+    },
+    {
+      "group": "accessibility",
+      "name": "a11y-scan",
+      "description": "Scan for WCAG 2.1/2.2 Level AA violations — statically over source (markup/components/styles) or at runtime against a live URL using axe-core. Produces a prioritized, deduplicated violation report with WCAG criteria and locations. WCAG-only; no vendor-specific standard."
+    },
+    {
+      "group": "accessibility",
+      "name": "a11y-test-gen",
+      "description": "Generate Playwright accessibility tests with axe-core for a component or page — automated WCAG scans plus keyboard-navigation, focus-management, and ARIA/state assertions — so accessibility regressions are caught in CI. WCAG 2.1/2.2 AA."
+    },
+    {
+      "group": "accessibility",
+      "name": "a11y-verify",
+      "description": "Verify that an accessibility fix actually resolved the WCAG violation and introduced no new ones — re-run axe on the affected states and re-check keyboard/focus/ARIA behavior — returning a pass/fail verdict with evidence."
+    },
+    {
+      "group": "architecture",
+      "name": "architecture-doc",
+      "description": "Produce or update a lightweight, current architecture document — components and responsibilities, key interfaces/contracts, data model, and how non-functional requirements map to design decisions — grounded in the actual code (via graph-repo). Realizes EASE-MAS A6."
+    },
+    {
+      "group": "architecture",
+      "name": "graph-repo",
+      "description": "Build a queryable code graph of a repository — modules, files, and symbols (functions/classes/exports) with import, call, and dependency edges — exported as JSON plus a Mermaid/HTML visualization. Powers impact analysis for review, refactor, debugging, and bounded repair."
+    },
+    {
+      "group": "architecture",
+      "name": "threat-model",
+      "description": "Produce a STRIDE-based threat model for a system or feature — assets, trust boundaries, data flows, threats per element, and prioritized mitigations mapped to controls — grounded in the actual architecture. Feeds security-review and the design of safe changes."
+    },
+    {
+      "group": "debugging",
+      "name": "analyze-bug",
+      "description": "Turn a raw failure (CI failure, crash, or report) into a structured, deduplicated bug — extract error, stack, logs, artifacts, correlation to the recent diff, and reproduction steps — and link it to the failing test/requirement in the traceability graph. Realizes EASE-MAS A15/A17."
+    },
+    {
+      "group": "debugging",
+      "name": "fix-bug",
+      "description": "Repair a defect under bounded autonomy — take ranked hypotheses, localize and patch, then validate through unit, targeted E2E, regression, and security before an independent repair-validator gate, and open a draft PR (human merges). Enforces max attempts/diff and termination conditions. Realizes EASE-MAS A20–A22 (Algorithms 6/7)."
+    },
+    {
+      "group": "debugging",
+      "name": "fix-test",
+      "description": "Repair a failing or incorrect test when the test (not the product) is at fault — wrong assertion, drifted selector, bad fixture/data, or flakiness — without weakening coverage. First decides whether the failure is a real product regression (then it's a bug, not a test fix)."
+    },
+    {
+      "group": "debugging",
+      "name": "root-cause",
+      "description": "Given a structured bug, produce ranked root-cause hypotheses (at least k competing causes) each with cited evidence and a confidence score, and flag ambiguity when the top hypothesis isn't clearly ahead. Read-only diagnosis that feeds fix-bug. Realizes EASE-MAS A19 (Algorithm 5)."
+    },
+    {
+      "group": "design",
+      "name": "design-spec",
+      "description": "Turn a brief or existing component into a design-system-aligned component spec — anatomy, variants/states, props/API, tokens, interaction, and accessibility requirements — ready for implementation and review. Framework-agnostic; grounded in the project's design tokens."
+    },
+    {
+      "group": "design",
+      "name": "from-figma",
+      "description": "Extract a design spec and design tokens from a Figma reference (via the Figma MCP or an exported file/link) and translate them into a design-spec plus token values that match the project's system. Optional integration — degrades gracefully when Figma access is unavailable."
+    },
+    {
+      "group": "development",
+      "name": "implement-change",
+      "description": "Implement a bounded change (a bug fix or a small improvement/feature step) from understanding through reproduction, minimal edit, tests, and local validation — then self-review with the critic agents. Feature-branch, tests required, human merges."
+    },
+    {
+      "group": "development",
+      "name": "refactor",
+      "description": "Perform a behavior-preserving refactor — reduce duplication, complexity, or unclear structure — safely, by first ensuring test coverage exists, then changing in small verified steps. No functional change; scope stays within ownership limits."
+    },
+    {
+      "group": "development",
+      "name": "start-feature",
+      "description": "Kick off a new feature the right way — turn intent into a spec, validate it, derive a lightweight architecture and an execution plan, get explicit human approval, then scaffold the branch, skeleton, and test stubs. Human-gated at the spec/plan (EASE-MAS A1–A7, permission L2)."
+    },
+    {
+      "group": "devops",
+      "name": "fix-ci",
+      "description": "Diagnose and repair a failing CI pipeline — pull the failing run's logs (via the git provider CLI), classify the failure (build/test/lint/flake/infra), find the root cause, and apply a minimal fix or open a targeted follow-up. CLI-first (gh / az) with MCP fallback."
+    },
+    {
+      "group": "devops",
+      "name": "release-readiness",
+      "description": "Run a release-readiness gate before shipping — verify tests/coverage, quality gates (security, a11y, perf), open blockers, changelog/version, migrations, and rollback plan — and produce a go/no-go report with the evidence. Realizes EASE-MAS A23. Does not deploy."
+    },
+    {
+      "group": "repo",
+      "name": "sweep-codebase",
+      "description": "Run a bounded codebase-hygiene sweep over a chosen scope — dead code, stale TODOs, lint/type issues, small inconsistencies, easy a11y/security nits — collect findings, deliberate, and route only approved, low-risk items to implement-change/refactor as small PRs. Bounded by design; never boils the ocean."
+    },
+    {
+      "group": "requirements",
+      "name": "from-requirements",
+      "description": "Turn raw requirements (a brief, ticket, or conversation) into a structured PRD — goals, user stories with acceptance criteria, scope/non-goals, constraints, and non-functional requirements — and seed the traceability graph with Requirement and PRDItem nodes. Realizes EASE-MAS A1–A4."
+    },
+    {
+      "group": "requirements",
+      "name": "grade-spec",
+      "description": "Grade a PRD/spec for quality before build starts — completeness, testability, clarity, scope discipline, and NFR coverage — with a scored rubric and specific fixes. Blocks weak specs from entering the build loop. Realizes EASE-MAS A5."
+    },
+    {
+      "group": "review",
+      "name": "code-review",
+      "description": "Run a roster-driven, multi-specialist review of a code change (diff/PR). Selects the relevant critic agents by what the change touches, collects severity-tagged findings, de-duplicates, then hands them to `deliberate` for a verdict. Read-only — posts a review, never merges."
+    },
+    {
+      "group": "review",
+      "name": "deliberate",
+      "description": "Evaluate a set of review findings and render a decision per finding and overall — Take Action, Stand Down, Defer, or Escalate — using evidence and severity, not majority vote. Used by code-review and sweep-codebase."
+    },
+    {
+      "group": "review",
+      "name": "pr-learn",
+      "description": "Extract durable, reusable lessons from merged PRs (and their reviews) — recurring bug patterns, missed test cases, review blind spots, conventions — and record them in shared memory so future reviews and changes improve."
+    },
+    {
+      "group": "testing",
+      "name": "coverage-gap",
+      "description": "Find where tests are missing — requirements/acceptance criteria with no linked test, code paths/branches not exercised, and untested error/edge cases — and produce a prioritized gap report that feeds test-plan/author-test."
+    },
+    {
+      "group": "testing",
+      "name": "flaky-test",
+      "description": "Detect non-deterministic (flaky) tests from run history, classify the cause (timing/order/network/data/environment), quarantine to unblock CI, and propose or apply a durable fix — distinct from a real product failure. Realizes EASE-MAS A16 + failure classification (Algorithm 4)."
+    },
+    {
+      "group": "testing",
+      "name": "test-plan",
+      "description": "Turn a requirement/PRD into an executable, risk-based test plan — strategy, scenarios per acceptance criterion, and canonical test cases (id, requirement link, preconditions, steps, assertions) with traceability. Feeds author-test/a11y-test-gen. Realizes EASE-MAS A10–A12."
+    },
+    {
+      "group": "testing",
+      "name": "validate-scenario",
+      "description": "Validate one test against its source scenario/requirement and return a verdict — Keep, UpdateTest, CreateTest, Deprecate, or Investigate — with an effort estimate and evidence, using a step-by-step comparison and a semantic-drift signal. Can author or fix the test on request."
+    },
+    {
+      "group": "testing/playwright",
+      "name": "author-test",
+      "description": "Author a Playwright test (unit-of-behavior or user journey) for a component, page, or requirement. Uses the Playwright MCP for interactive selector/snapshot discovery and the CLI to run the new test once. Links the test to its requirement in the traceability graph (EASE-MAS A13)."
+    },
+    {
+      "group": "testing/playwright",
+      "name": "playwright-auth",
+      "description": "Authenticate against a configured test environment and save a reusable Playwright storage-state file (cookies/localStorage) so other Playwright skills can run authenticated tests without logging in each time. Supports none/storage-state/basic/cert/oidc auth from config.test_environments."
+    },
+    {
+      "group": "testing/playwright",
+      "name": "run-tests",
+      "description": "Execute Playwright tests deterministically via the CLI against a configured environment, collect artifacts (trace/video/screenshot/DOM/console/network), parse results, and record an Execution (and any Failures) in the traceability graph. This is the authoritative test runner (EASE-MAS A14)."
+    },
+    {
+      "group": "testing/playwright",
+      "name": "update-test",
+      "description": "Update a Playwright test that has drifted from the current UI or requirement — fix selectors, assertions, fixtures, or flow so it once again asserts the intended behavior, without weakening it. Preserves the requirement link."
+    },
+    {
+      "group": "testing/playwright",
+      "name": "verify-test",
+      "description": "Verify a Playwright test is correct and non-flaky — it asserts the right behavior, passes for the right reason, fails when the behavior breaks, and is stable across repeated runs. Reports a verdict with evidence."
+    }
+  ],
+  "agents": [
+    {
+      "name": "a11y-tester",
+      "kind": "lead",
+      "description": "Accessibility audit lead. Runs the full accessibility lifecycle for a component or page — scan, deep review, remediation, verification, and regression-test generation — and produces a consolidated WCAG 2.1/2.2 AA report. Orchestrates the accessibility skills."
+    },
+    {
+      "name": "accessibility-advocate",
+      "kind": "critic",
+      "description": "Independent accessibility critic (WCAG 2.1/2.2 AA). Reviews UI changes for semantics, keyboard operability, focus management, name/role/value, contrast, and assistive-technology support, and flags violations with the WCAG criterion and a fix."
+    },
+    {
+      "name": "architecture-advocate",
+      "kind": "critic",
+      "description": "Independent architecture critic. Reviews a change for module boundaries, coupling/cohesion, state ownership, API/type contracts, and dependency direction, and flags designs that will be costly to change."
+    },
+    {
+      "name": "bug-exterminator",
+      "kind": "lead",
+      "description": "Bug-fix lead. Drives a defect from reproduction through root-cause analysis to a bounded, verified repair — reproduce → analyze → hypothesize → fix → verify → regression-gate — and hands off to repair-validator before any human merge. Enforces repair bounds."
+    },
+    {
+      "name": "code-reviewer",
+      "kind": "critic",
+      "description": "Independent correctness-and-quality critic for a code change. Reviews a diff/PR for logic errors, edge cases, error handling, readability, and regression risk, and returns severity-tagged findings. Dispatched by review/code-review."
+    },
+    {
+      "name": "debugger",
+      "kind": "critic",
+      "description": "Reproduce-and-isolate specialist. Given a failure, reproduces it deterministically, narrows to the smallest failing case, and localizes the root cause with evidence — pairs with analyze-bug and root-cause."
+    },
+    {
+      "name": "dependency-manager",
+      "kind": "critic",
+      "description": "Independent dependency critic. Reviews added/updated dependencies for necessity, security advisories, license compatibility, maintenance health, and supply-chain risk, and flags anything that shouldn't be pulled in."
+    },
+    {
+      "name": "documentation-steward",
+      "kind": "critic",
+      "description": "Independent documentation critic. Reviews whether a change keeps docs, READMEs, public API references, and comments truthful and in sync, and flags drift, missing docs for public contracts, and misleading comments."
+    },
+    {
+      "name": "e2e-test-author",
+      "kind": "critic",
+      "description": "Independent end-to-end test critic and author-advisor. Reviews whether critical user journeys are covered by resilient Playwright E2E tests (stable selectors, real assertions, flake resistance) and recommends the journeys worth automating."
+    },
+    {
+      "name": "internationalization-expert",
+      "kind": "critic",
+      "description": "Independent i18n/l10n critic. Reviews changes for hardcoded strings, formatting (dates/numbers/currency), pluralization, RTL support, and locale-safe logic, and flags anything that breaks translation or non-English locales."
+    },
+    {
+      "name": "manual-tester",
+      "kind": "critic",
+      "description": "Independent exploratory-testing critic. Probes a change for boundary conditions, error states, unusual inputs, and race/interaction bugs that automated tests miss, and reports concrete, reproducible issues."
+    },
+    {
+      "name": "observability-advocate",
+      "kind": "critic",
+      "description": "Independent observability critic. Reviews whether a change is diagnosable in production — structured logs, metrics, traces, error reporting, and privacy-safe signals — and flags blind spots and PII leaks."
+    },
+    {
+      "name": "performance-advocate",
+      "kind": "critic",
+      "description": "Independent performance critic. Reviews a change for algorithmic complexity, N+1 and chatty I/O, allocation/memory, bundle size, rendering, and caching, and flags regressions with evidence."
+    },
+    {
+      "name": "refactorer",
+      "kind": "critic",
+      "description": "Independent maintainability critic. Reviews a change for duplication, over-long functions, unclear naming, and abstraction thresholds, and recommends focused refactors — without demanding speculative generality."
+    },
+    {
+      "name": "repair-validator",
+      "kind": "critic",
+      "description": "Independent gate for autonomous or assisted repairs. Verifies that a proposed fix actually resolves the failure it targets, introduces no regression, respects scope, and meets quality gates — before any human merge. Read-only and adversarial; it does not author fixes."
+    },
+    {
+      "name": "security-advocate",
+      "kind": "critic",
+      "description": "Independent security critic (EASE-MAS A9). Reviews a change for authn/authz, injection, secrets, unsafe deserialization, SSRF, insecure defaults, and supply-chain risk, and returns severity-tagged findings with concrete fixes."
+    },
+    {
+      "name": "style-guardian",
+      "kind": "critic",
+      "description": "Independent UI/visual-consistency critic. Reviews changes for design-token usage, responsive behavior, spacing/typography consistency, motion, and visual polish — distinct from accessibility and code style."
+    },
+    {
+      "name": "supervisor",
+      "kind": "lead",
+      "description": "Closed-loop orchestrator. Drives the EASE-MAS lifecycle (requirements → PRD → architecture → code → test → execution → failure → RCA → repair → re-validate) as a DAG, enforces autonomy/permission levels and human-in-the-loop gates, and delegates to leads/critics/skills. Never merges autonomously."
+    },
+    {
+      "name": "traceability-keeper",
+      "kind": "lead",
+      "description": "Maintains the traceability graph that links requirements → PRD items → architecture decisions → code symbols → tests → executions → failures → bugs → hypotheses → repairs → validations. Records nodes and edges as work progresses so impact and coverage are always queryable."
+    },
+    {
+      "name": "unit-testing-advocate",
+      "kind": "critic",
+      "description": "Independent unit-test critic. Reviews whether a change is covered by meaningful unit tests — contracts, equivalence classes, boundaries, and error paths — not just line coverage, and flags weak or missing tests."
+    }
+  ]
+}

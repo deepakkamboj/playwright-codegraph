@@ -1,0 +1,84 @@
+---
+title: Architecture
+---
+
+# Architecture
+
+Playwright CodeGraph is a deterministic local and CI data plane. It converts
+repository evidence into a canonical test plan, executes that plan, and produces
+portable quality artifacts.
+
+## Component Flow
+
+```text
+Git diff ───────────────┐
+Rush workspace graph ──┤
+Source code graph ──────┼──> Deterministic planner ──> plan.json
+Scenario registry ──────┤              │
+Test inventory ─────────┘              ├──> Unit runner
+                                       ├──> Playwright runner
+                                       └──> HTML quality report
+```
+
+## Graph Layers
+
+| Layer | Evidence | Purpose |
+| --- | --- | --- |
+| Git graph | merge base, committed, staged, unstaged, and untracked changes | Establish the exact change set |
+| Workspace graph | Rush projects, dependencies, and reverse dependents | Expand package-level impact |
+| Source graph | imports and file reachability from CodeGraph | Find statically affected tests |
+| Scenario graph | journeys, scenario dependencies, code paths, and tests | Express business impact |
+| Runtime graph | optional LCOV or V8 observations | Distinguish declared coverage from observed execution |
+| History graph | shadow and replay records | Measure fallback and missed-failure behavior |
+
+## Deterministic Boundary
+
+The selector uses only versioned, inspectable inputs:
+
+- Git references and working-tree state
+- Strict configuration
+- Rush manifests and package manifests
+- CodeGraph protocol output
+- Scenario YAML and test annotations
+- Test file inventory
+
+Identical inputs produce a byte-stable plan. Timestamps and durations belong to
+execution records, not selection plans.
+
+## Fail-Open Safety
+
+The planner expands to a full run when it cannot prove selective execution is
+safe. Examples include:
+
+- Missing, stale, incompatible, or failed graph operations
+- Incomplete Git history
+- Unknown repository files
+- Global configuration triggers
+- Scenario coverage gaps
+- Selection or command-length limits
+- Invalid configuration
+
+AI can explain or recommend work, but it is never the sole reason to skip a
+test.
+
+## Public Contracts
+
+The TypeScript API and CLI share versioned contracts for:
+
+- Changed files
+- Workspace projects
+- Selection reasons
+- Full-run reasons
+- Selection plans
+- Scenario coverage
+- Execution, shadow, and replay artifacts
+
+Repository-derived values are escaped before entering the standalone report,
+and its Content Security Policy blocks external scripts, styles, and resources.
+
+## Cross-Platform Execution
+
+The CLI does not use a command shell to run CodeGraph, Vitest, Jest, or
+Playwright. It resolves local package binaries and launches their JavaScript
+entry points through Node.js. CI validates Node.js 20 and 22 on Windows and
+Ubuntu.
