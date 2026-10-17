@@ -34,7 +34,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx --test test/**/*.test.ts",
+    "test": "node scripts/run-tests.mjs",
     "lint": "eslint src test",
     "check": "npm run typecheck && npm test && npm run lint && npm run build"
   },
