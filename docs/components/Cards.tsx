@@ -27,10 +27,16 @@ export function Card({ icon, title, href, children }: CardProps) {
           background-color: var(--card-bg, #ffffff);
           box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
-        .nextra-card-content:hover {
-          border-color: #3b82f6;
+        :global(.nextra-card):hover .nextra-card-content,
+        :global(.nextra-card):focus-visible .nextra-card-content {
+          border-color: var(--card-border-hover, #9a5b3b);
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
           transform: translateY(-2px);
+        }
+        :global(.nextra-card):focus-visible {
+          border-radius: 0.5rem;
+          outline: 3px solid var(--card-focus, #7d472e);
+          outline-offset: 3px;
         }
         .nextra-card-icon {
           display: flex;
@@ -38,8 +44,14 @@ export function Card({ icon, title, href, children }: CardProps) {
           justify-content: flex-start;
           width: 2.5rem;
           height: 2.5rem;
-          color: #3b82f6;
+          color: var(--card-icon, #9a5b3b);
           margin-bottom: 0.75rem;
+          transition: color 0.2s ease, transform 0.2s ease;
+        }
+        :global(.nextra-card):hover .nextra-card-icon,
+        :global(.nextra-card):focus-visible .nextra-card-icon {
+          color: var(--card-icon-hover, #c66a32);
+          transform: translateY(-2px);
         }
         .nextra-card-icon :global(svg) {
           width: 100%;
@@ -58,6 +70,16 @@ export function Card({ icon, title, href, children }: CardProps) {
         }
         .nextra-card-description :global(p) {
           margin: 0;
+        }
+        @media (forced-colors: active) {
+          .nextra-card-icon,
+          :global(.nextra-card):hover .nextra-card-icon,
+          :global(.nextra-card):focus-visible .nextra-card-icon {
+            color: LinkText;
+          }
+          :global(.nextra-card):focus-visible {
+            outline-color: Highlight;
+          }
         }
       `}</style>
     </Link>
