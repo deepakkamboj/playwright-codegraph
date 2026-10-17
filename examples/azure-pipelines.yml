@@ -1,0 +1,41 @@
+trigger: none
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+  - task: NodeTool@0
+    inputs:
+      versionSpec: 22.x
+  - script: npm ci
+    displayName: Install dependencies
+  - task: Cache@2
+    inputs:
+      key: '"codegraph" | "$(Agent.OS)" | package-lock.json | rush.json | common/config/rush/** | playwright-codegraph.config.json'
+      restoreKeys: |
+        "codegraph" | "$(Agent.OS)"
+      path: .codegraph
+  - bash: |
+      if npx playwright-codegraph graph status; then
+        npx playwright-codegraph graph sync
+      else
+        npx playwright-codegraph graph build
+      fi
+    displayName: Build or sync codegraph
+  - script: npx playwright-codegraph scenarios
+    displayName: Validate scenario coverage
+  - script: npx playwright-codegraph plan --base origin/$(System.PullRequest.TargetBranchName)
+    displayName: Create deterministic plan
+  - script: npx playwright-codegraph run
+    displayName: Run selected tests
+  - task: PublishPipelineArtifact@1
+    condition: always()
+    inputs:
+      targetPath: test-selection-out
+      artifact: test-selection

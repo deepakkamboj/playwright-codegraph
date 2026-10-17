@@ -1,0 +1,40 @@
+name: Affected tests example
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  affected:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: .codegraph
+          key: codegraph-${{ runner.os }}-${{ hashFiles('package-lock.json', 'rush.json', 'common/config/**', 'playwright-codegraph.config.json') }}
+          restore-keys: |
+            codegraph-${{ runner.os }}-
+      - name: Build or sync graph
+        shell: bash
+        run: |
+          if npx playwright-codegraph graph status; then
+            npx playwright-codegraph graph sync
+          else
+            npx playwright-codegraph graph build
+          fi
+      - run: npx playwright-codegraph scenarios
+      - run: npx playwright-codegraph plan --base origin/${{ github.base_ref }}
+      - run: npx playwright-codegraph run
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-selection
+          path: test-selection-out/
