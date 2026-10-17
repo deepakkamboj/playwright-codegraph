@@ -1,16 +1,44 @@
-# playwright-codegraph
+<p align="center">
+  <img src="./assets/playwright-codegraph-logo.svg" width="620" alt="Playwright CodeGraph — Change to Scenario to Test">
+</p>
 
-[![CI](https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml/badge.svg)](https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml)
-![Node.js 20 and 22](https://img.shields.io/badge/Node.js-20%20%7C%2022-339933?logo=nodedotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-supported-2EAD33?logo=playwright&logoColor=white)
-![CodeGraph](https://img.shields.io/badge/CodeGraph-1.x-6F42C1)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+<h1 align="center">Playwright CodeGraph</h1>
 
-Deterministic, fail-open affected-test selection and scenario coverage for
-Rush-based TypeScript repositories. File-level reachability is provided by the
-required [`@colbymchenry/codegraph`](https://www.npmjs.com/package/@colbymchenry/codegraph)
-CLI.
+<p align="center">
+  <strong>Deterministic scenario coverage and affected-test selection for TypeScript monorepos</strong>
+</p>
+
+<p align="center">
+  Map every code change to customer journeys, scenario workflows, and the unit or Playwright tests that prove them.
+</p>
+
+<p align="center">
+  <a href="https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/docs.yml"><img alt="Documentation" src="https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/docs.yml/badge.svg"></a>
+  <a href="https://www.npmjs.com/package/playwright-codegraph"><img alt="npm version 0.1.0" src="https://img.shields.io/badge/npm-v0.1.0-cb3837?logo=npm&logoColor=white"></a>
+  <img alt="TypeScript strict" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white">
+  <img alt="Playwright supported" src="https://img.shields.io/badge/Playwright-supported-2EAD33?logo=playwright&logoColor=white">
+  <img alt="Node.js 20 and 22" src="https://img.shields.io/badge/Node.js-20%20%7C%2022-339933?logo=nodedotjs&logoColor=white">
+  <a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-f5c542.svg"></a>
+</p>
+
+<p align="center">
+  <a href="https://deepakkamboj.github.io/playwright-codegraph/"><strong>Documentation</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="./docs/codegraph-quality-report-sample.html"><strong>Interactive Report</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="#getting-started"><strong>Getting Started</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="./DEPLOYMENT.md"><strong>Deployment</strong></a>
+</p>
+
+---
+
+**Playwright CodeGraph** builds an evidence-backed map from a Git diff through
+source and package dependencies to customer scenarios and executable tests.
+Every selection decision is explainable. When graph, history, configuration,
+or coverage evidence is incomplete, the planner fails open to the full suite
+instead of silently risking a missed regression.
 
 ## Why CodeGraph
 
@@ -372,10 +400,10 @@ dependency graph. Runtime evidence proves that an instrumented execution
 observed code in a file. Neither is presented as proof that every branch or
 requirement assertion was validated.
 
-## Install
+## Getting Started
 
 ```bash
-npm install --save-dev playwright-codegraph @colbymchenry/codegraph
+npm install --save-dev playwright-codegraph
 ```
 
 Node.js 20 or newer is required.
@@ -487,6 +515,18 @@ long-running:
 
 See [the GitHub example](./examples/github-actions-affected.yml) and
 [the Azure Pipelines example](./examples/azure-pipelines.yml).
+
+## npm Publishing
+
+The [`Publish npm Package`](./.github/workflows/publish.yml) workflow publishes
+only after all package checks and the production dependency audit pass. Create
+the `NPM_TOKEN` GitHub Actions secret in the repository or `npm` environment;
+local `.env` files are ignored and are never read by the workflow.
+
+- Publishing a GitHub release verifies that `v<release>` matches the package
+  version and publishes with the `latest` tag.
+- A manual workflow run supports the `latest`, `next`, and `beta` npm tags.
+- npm provenance is enabled through GitHub OIDC.
 
 ## Complete Rush example
 

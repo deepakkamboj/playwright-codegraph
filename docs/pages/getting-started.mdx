@@ -19,12 +19,12 @@ Create your first deterministic affected-test plan and standalone quality report
 Rush is the currently implemented workspace adapter. npm, pnpm, and Yarn workspace
 auto-detection remain on the product roadmap.
 
-## 1. Install the CLI and Graph Engine
+## 1. Install Playwright CodeGraph
 
-<PackageInstall packages={["playwright-codegraph", "@colbymchenry/codegraph"]} dev />
+<PackageInstall packages={["playwright-codegraph"]} dev />
 
-`@colbymchenry/codegraph` is a required peer dependency. CodeGraph invokes its
-JavaScript entry point directly, which keeps execution shell-free on Windows and Linux.
+The package declares its compatible graph engine through package metadata.
+`doctor` verifies that the resolved engine is present and protocol-compatible.
 
 ## 2. Add the Configuration
 

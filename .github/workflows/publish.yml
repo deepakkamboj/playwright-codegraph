@@ -1,0 +1,50 @@
+name: Publish npm Package
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      npm_tag:
+        description: npm distribution tag
+        required: true
+        default: latest
+        type: choice
+        options:
+          - latest
+          - next
+          - beta
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run check
+      - run: npm audit --omit=dev
+      - name: Verify release version
+        if: github.event_name == 'release'
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: node -e "const version=require('./package.json').version; const tag=process.env.RELEASE_TAG.replace(/^v/,''); if(tag!==version) throw new Error('Release tag '+tag+' does not match package version '+version)"
+      - name: Publish package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.npm_tag || 'latest' }}
+        run: npm publish --access public --provenance --tag "$NPM_TAG"
