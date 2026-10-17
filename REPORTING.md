@@ -104,6 +104,7 @@ Reads `execution.json` and shows:
 - Unit and Playwright commands.
 - Executables and arguments.
 - Per-command exit codes.
+- Test execution runner, platform, architecture, and Node.js version.
 
 Child stdout and stderr are not persisted in the execution artifact.
 

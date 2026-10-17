@@ -33,8 +33,7 @@
     "LICENSE",
     "README.md",
     "REPORTING.md",
-    "DEPLOYMENT.md",
-    "THIRD_PARTY_NOTICES.md"
+    "DEPLOYMENT.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
