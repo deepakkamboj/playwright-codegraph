@@ -1,0 +1,32 @@
+{
+  "baseRef": "origin/main",
+  "includeUntracked": true,
+  "unitTestGlobs": ["**/src/**/*.test.{ts,tsx}"],
+  "playwrightTestGlobs": ["apps/e2e/tests/**/*.spec.ts"],
+  "coreTestGlobs": ["apps/e2e/tests/core/**/*.spec.ts"],
+  "smokeTestGlobs": ["apps/e2e/tests/**/*.smoke.spec.ts"],
+  "projectDependentDepth": 1,
+  "globalTriggers": ["rush.json", "common/config/**", "playwright.config.ts"],
+  "mappings": [
+    {
+      "when": ["packages/checkout/**"],
+      "tests": ["apps/e2e/tests/checkout/**"]
+    }
+  ],
+  "scenarios": {
+    "registry": "test-scenarios.yml",
+    "requireRuntimeEvidence": false
+  },
+  "unit": {
+    "executable": "npx",
+    "args": ["jest", "--passWithNoTests", "--runTestsByPath", "{files}"],
+    "fullArgs": ["rush", "test"],
+    "maxArgumentCharacters": 20000
+  },
+  "playwright": {
+    "executable": "npx",
+    "args": ["playwright", "test", "{files}"],
+    "fullArgs": ["playwright", "test"],
+    "maxArgumentCharacters": 20000
+  }
+}
