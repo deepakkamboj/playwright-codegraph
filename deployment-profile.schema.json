@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://playwright-codegraph.dev/schemas/deployment-profile.schema.json",
+  "title": "Playwright CodeGraph deployment profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "mode", "execution", "artifacts"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "mode": { "enum": ["cloud", "hybrid", "on-prem"] },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["location", "networkAccess"],
+      "properties": {
+        "location": { "const": "customer-environment" },
+        "networkAccess": { "enum": ["none", "egress-only", "private-link"] }
+      }
+    },
+    "controlPlane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["endpoint", "authentication"],
+      "properties": {
+        "endpoint": { "type": "string", "format": "uri" },
+        "authentication": { "enum": ["oidc", "workload-identity", "mutual-tls"] }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publish", "redactPaths"],
+      "properties": {
+        "publish": { "enum": ["local-only", "metadata-only", "full-report"] },
+        "redactPaths": { "type": "boolean" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "cloud" } } },
+      "then": { "required": ["controlPlane"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "hybrid" } } },
+      "then": { "required": ["controlPlane"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "on-prem" } } },
+      "then": {
+        "properties": {
+          "artifacts": {
+            "properties": { "publish": { "const": "local-only" } }
+          }
+        }
+      }
+    }
+  ]
+}

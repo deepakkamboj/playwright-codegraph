@@ -43,6 +43,12 @@ test('generates a standalone escaped quality dashboard from all artifact types',
       entries: [
         {
           scenarioId: 'checkout.happy-path',
+          title: 'Complete checkout',
+          journeyId: 'checkout',
+          journeyTitle: 'Checkout',
+          dependsOn: [],
+          criticality: 'critical',
+          tags: ['happy-path', 'positive'],
           testFiles: ['checkout.spec.ts'],
           resolvedCodePaths: ['checkout.ts'],
           staticallyLinkedCodePaths: ['checkout.ts'],
@@ -86,6 +92,14 @@ test('generates a standalone escaped quality dashboard from all artifact types',
   assert.match(html, /PR &lt;42&gt;/);
   assert.match(html, /Pull-request impact/);
   assert.match(html, /checkout\.happy-path/);
+  assert.match(html, /Code graph/);
+  assert.match(html, /User journey workflows/);
+  assert.match(html, /Complete checkout/);
+  assert.match(html, /happy-path/);
+  assert.match(html, /High contrast black/);
+  for (const theme of ['default', 'aquatic', 'forest', 'sunset', 'midnight', 'corporate', 'hc-black', 'hc-white']) {
+    assert.match(html, new RegExp(`data-theme="${theme}"|value="${theme}"`));
+  }
   assert.match(html, /Shadow and replay safety/);
   assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;\.ts/);
   assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);

@@ -89,30 +89,39 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
         ? 'Safe fallback'
         : 'Ready';
   return `<!doctype html>
-<html lang="en">
+<html lang="en" data-theme="midnight">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
   <title>${escapeHtml(title)}</title>
   <style>
-    :root { color-scheme: light dark; --bg:#0b1020; --panel:#151c2f; --muted:#9ca8c3; --text:#f4f7ff; --line:#2b3653; --accent:#75a7ff; --good:#5dd6a0; --warn:#ffc857; --bad:#ff7b88; }
+    :root,[data-theme="default"] { color-scheme:light; --bg:#f3f6fc; --panel:#ffffff; --card:#f8faff; --muted:#6b7a99; --text:#0f1b3d; --line:#dce4f2; --accent:#2457d6; --accent-fg:#ffffff; --good:#15803d; --warn:#b45309; --bad:#c81e3a; --hero-a:#16348f; --hero-b:#2457d6; --hero-fg:#ffffff; }
+    [data-theme="aquatic"] { color-scheme:light; --bg:#ecfeff; --panel:#ffffff; --card:#f0fdff; --muted:#0e7490; --text:#164e63; --line:#a5f3fc; --accent:#0284c7; --accent-fg:#ffffff; --good:#0d9488; --warn:#b45309; --bad:#e11d48; --hero-a:#075985; --hero-b:#0891b2; --hero-fg:#ffffff; }
+    [data-theme="forest"] { color-scheme:light; --bg:#f0fdf4; --panel:#ffffff; --card:#f7fef9; --muted:#166534; --text:#14532d; --line:#bbf7d0; --accent:#16a34a; --accent-fg:#ffffff; --good:#15803d; --warn:#a16207; --bad:#dc2626; --hero-a:#14532d; --hero-b:#16a34a; --hero-fg:#ffffff; }
+    [data-theme="sunset"] { color-scheme:light; --bg:#fff7ed; --panel:#ffffff; --card:#fffbf5; --muted:#9a3412; --text:#7c2d12; --line:#fed7aa; --accent:#ea580c; --accent-fg:#ffffff; --good:#15803d; --warn:#a16207; --bad:#dc2626; --hero-a:#9a3412; --hero-b:#ea580c; --hero-fg:#ffffff; }
+    [data-theme="midnight"] { color-scheme:dark; --bg:#030712; --panel:#111827; --card:#182235; --muted:#9ca3af; --text:#f9fafb; --line:#374151; --accent:#818cf8; --accent-fg:#0f172a; --good:#34d399; --warn:#fbbf24; --bad:#fb7185; --hero-a:#111827; --hero-b:#312e81; --hero-fg:#f9fafb; }
+    [data-theme="corporate"] { color-scheme:light; --bg:#f8fafc; --panel:#ffffff; --card:#f8fafc; --muted:#475569; --text:#0f172a; --line:#cbd5e1; --accent:#334155; --accent-fg:#ffffff; --good:#15803d; --warn:#b45309; --bad:#b91c1c; --hero-a:#0f172a; --hero-b:#334155; --hero-fg:#ffffff; }
+    [data-theme="hc-black"] { color-scheme:dark; --bg:#000000; --panel:#0d0d0d; --card:#1a1a1a; --muted:#d1d5db; --text:#ffffff; --line:#ffffff; --accent:#ffff00; --accent-fg:#000000; --good:#55efc4; --warn:#ffd93d; --bad:#ff6b6b; --hero-a:#000000; --hero-b:#000000; --hero-fg:#ffffff; }
+    [data-theme="hc-white"] { color-scheme:light; --bg:#ffffff; --panel:#ffffff; --card:#f5f5f5; --muted:#333333; --text:#000000; --line:#000000; --accent:#00008b; --accent-fg:#ffffff; --good:#006400; --warn:#7a4a00; --bad:#a40000; --hero-a:#ffffff; --hero-b:#ffffff; --hero-fg:#000000; }
     * { box-sizing:border-box; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
     body { margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
-    header { padding:2rem max(1rem,5vw); border-bottom:1px solid var(--line); background:linear-gradient(135deg,#111a33,#172447); }
+    header { padding:2rem max(1rem,5vw); border-bottom:1px solid var(--line); background:linear-gradient(135deg,var(--hero-a),var(--hero-b)); color:var(--hero-fg); }
     h1,h2,h3 { line-height:1.2; }
     h1 { margin:.25rem 0; font-size:clamp(1.8rem,4vw,3rem); }
     h2 { margin-top:0; }
     .eyebrow { color:var(--accent); font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
-    .subtitle,.muted { color:var(--muted); }
+    header .subtitle { color:var(--hero-fg); opacity:.85; } .muted { color:var(--muted); }
     nav { display:flex; gap:.5rem; flex-wrap:wrap; padding:1rem max(1rem,5vw); position:sticky; top:0; background:rgba(11,16,32,.96); border-bottom:1px solid var(--line); z-index:2; }
-    button { border:1px solid var(--line); background:var(--panel); color:var(--text); padding:.55rem .8rem; border-radius:.5rem; cursor:pointer; }
+    button,select { border:1px solid var(--line); background:var(--panel); color:var(--text); padding:.55rem .8rem; border-radius:.5rem; }
+    button { cursor:pointer; }
     button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
     main { padding:1.5rem max(1rem,5vw) 4rem; }
     section { margin:0 0 1.5rem; padding:1.25rem; background:var(--panel); border:1px solid var(--line); border-radius:.8rem; }
     section[hidden] { display:none; }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.8rem; }
-    .card { padding:1rem; border:1px solid var(--line); border-radius:.65rem; background:#10172a; }
+    .card { padding:1rem; border:1px solid var(--line); border-radius:.65rem; background:var(--card); }
     .metric { font-size:1.65rem; font-weight:800; }
     .good { color:var(--good); } .warn { color:var(--warn); } .bad { color:var(--bad); }
     .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:.15rem .55rem; margin:.1rem; font-size:.82rem; }
@@ -122,8 +131,16 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
     code { color:#b9d1ff; overflow-wrap:anywhere; }
     .scroll { overflow-x:auto; }
     .empty { padding:1rem; border:1px dashed var(--line); color:var(--muted); border-radius:.5rem; }
-    #test-filter { width:100%; max-width:32rem; padding:.6rem; background:#0c1325; color:var(--text); border:1px solid var(--line); border-radius:.5rem; }
-    @media print { nav { display:none; } section[hidden] { display:block; } body { background:white; color:black; } section,.card { background:white; border-color:#bbb; } }
+    #test-filter { width:100%; max-width:32rem; padding:.6rem; background:var(--card); color:var(--text); border:1px solid var(--line); border-radius:.5rem; }
+    .theme-control { margin-left:auto; display:flex; align-items:center; gap:.5rem; }
+    .theme-control label { color:var(--muted); }
+    .graph { width:100%; min-width:720px; height:auto; background:var(--card); border:1px solid var(--line); border-radius:.65rem; }
+    .graph text { fill:var(--text); font:12px Inter,Segoe UI,Arial,sans-serif; }
+    .graph .lane { fill:var(--muted); font-weight:700; text-transform:uppercase; }
+    .graph .edge { stroke:var(--line); stroke-width:2; }
+    .graph .node { fill:var(--panel); stroke:var(--accent); stroke-width:2; }
+    .graph .changed { stroke:var(--warn); } .graph .scenario { stroke:var(--accent); } .graph .test { stroke:var(--good); }
+    @media print { nav { display:none; } section[hidden] { display:block; } }
   </style>
 </head>
 <body>
@@ -135,9 +152,11 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
   <nav aria-label="Report sections">
     ${navigationButton('overview', 'Overview', true)}
     ${navigationButton('pr-impact', 'PR impact')}
+    ${navigationButton('code-graph', 'Code graph')}
     ${navigationButton('scenarios', 'Scenarios')}
     ${navigationButton('execution', 'CI execution')}
     ${navigationButton('safety', 'Shadow and replay')}
+    <div class="theme-control"><label for="theme-select">Theme</label><select id="theme-select" aria-label="Report theme"><option value="default">Light</option><option value="aquatic">Aquatic</option><option value="forest">Forest</option><option value="sunset">Sunset</option><option value="midnight">Midnight</option><option value="corporate">Corporate</option><option value="hc-black">High contrast black</option><option value="hc-white">High contrast white</option></select></div>
   </nav>
   <main>
     <section id="overview" data-report-section>
@@ -156,6 +175,10 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
     <section id="pr-impact" data-report-section hidden>
       <h2>Pull-request impact</h2>
       ${renderImpact(plan)}
+    </section>
+    <section id="code-graph" data-report-section hidden>
+      <h2>Code graph</h2>
+      ${renderCodeGraph(plan, scenarios)}
     </section>
     <section id="scenarios" data-report-section hidden>
       <h2>Scenario coverage</h2>
@@ -182,6 +205,20 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
       const query = filter.value.toLowerCase();
       for (const row of document.querySelectorAll('[data-test-row]')) row.hidden = !row.textContent.toLowerCase().includes(query);
     });
+    const themeSelect = document.querySelector('#theme-select');
+    const applyTheme = (theme) => {
+      document.documentElement.dataset.theme = theme;
+      try { localStorage.setItem('playwright-codegraph-theme', theme); } catch {}
+    };
+    if (themeSelect) {
+      let saved = null;
+      try { saved = localStorage.getItem('playwright-codegraph-theme'); } catch {}
+      const available = [...themeSelect.options].map((option) => option.value);
+      const preferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'midnight' : 'default';
+      themeSelect.value = available.includes(saved) ? saved : preferred;
+      applyTheme(themeSelect.value);
+      themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
+    }
   </script>
 </body>
 </html>
@@ -203,12 +240,89 @@ function renderImpact(plan: SelectionPlan | undefined): string {
   return `<div class="grid">${metricCard('Changed files', String(plan.changedFiles.length))}${metricCard('Changed projects', String(plan.changedProjects.length))}${metricCard('Selected tests', String(plan.tests.length))}</div><h3>Changed projects</h3><p>${plan.changedProjects.map((project) => `<span class="pill">${escapeHtml(project)}</span>`).join('') || 'None'}</p><h3>Changed files</h3>${changes}<h3>Prioritized tests</h3>${tests}`;
 }
 
+function renderCodeGraph(plan: SelectionPlan | undefined, report: ScenarioCoverageReport | undefined): string {
+  if (!plan && !report) return emptyState('No plan or scenario coverage artifact was found.');
+  const changed = (plan?.changedFiles ?? []).slice(0, 12);
+  const scenarios = (report?.entries ?? []).slice(0, 12);
+  const testPaths = [...new Set(scenarios.flatMap((entry) => entry.testFiles).concat(plan?.tests.map((test) => test.path) ?? []))]
+    .sort()
+    .slice(0, 12);
+  const rowHeight = 58;
+  const height = Math.max(changed.length, scenarios.length, testPaths.length, 1) * rowHeight + 56;
+  const node = (x: number, y: number, cssClass: string, label: string) =>
+    `<g><rect class="node ${cssClass}" x="${x}" y="${y}" width="250" height="38" rx="8"/><text x="${x + 10}" y="${y + 24}">${escapeHtml(shortLabel(label))}</text><title>${escapeHtml(label)}</title></g>`;
+  const centers = (count: number) => Array.from({ length: count }, (_, index) => 42 + index * rowHeight);
+  const changedY = centers(changed.length);
+  const scenarioY = centers(scenarios.length);
+  const testY = centers(testPaths.length);
+  const edges: string[] = [];
+  for (const [scenarioIndex, scenario] of scenarios.entries()) {
+    for (const [fileIndex, file] of changed.entries()) {
+      if (scenario.resolvedCodePaths.includes(file.path) || scenario.staticallyLinkedCodePaths.includes(file.path)) {
+        edges.push(`<line class="edge" x1="270" y1="${changedY[fileIndex]! + 19}" x2="330" y2="${scenarioY[scenarioIndex]! + 19}" marker-end="url(#impact-arrow)"/>`);
+      }
+    }
+    for (const testFile of scenario.testFiles) {
+      const testIndex = testPaths.indexOf(testFile);
+      if (testIndex >= 0) {
+        edges.push(`<line class="edge" x1="580" y1="${scenarioY[scenarioIndex]! + 19}" x2="640" y2="${testY[testIndex]! + 19}" marker-end="url(#impact-arrow)"/>`);
+      }
+    }
+  }
+  const impactGraph = `<div class="scroll"><svg class="graph" viewBox="0 0 910 ${height}" role="img" aria-labelledby="impact-graph-title impact-graph-desc"><title id="impact-graph-title">Code change impact graph</title><desc id="impact-graph-desc">Changed files connect to covered scenarios, which connect to selected tests.</desc><defs><marker id="impact-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--line)"/></marker></defs><text class="lane" x="20" y="25">Changed files</text><text class="lane" x="330" y="25">Scenarios</text><text class="lane" x="640" y="25">Tests</text>${edges.join('')}${changed.map((file, index) => node(20, changedY[index]!, 'changed', file.path)).join('')}${scenarios.map((scenario, index) => node(330, scenarioY[index]!, 'scenario', scenario.title ?? scenario.scenarioId)).join('')}${testPaths.map((testFile, index) => node(640, testY[index]!, 'test', testFile)).join('')}</svg></div>`;
+  const truncated =
+    (plan?.changedFiles.length ?? 0) > changed.length ||
+    (report?.entries.length ?? 0) > scenarios.length ||
+    new Set(report?.entries.flatMap((entry) => entry.testFiles) ?? []).size > testPaths.length;
+  return `<p class="muted">Deterministic traceability from changed code through scenario coverage to tests. The graph uses only report artifacts and makes no network requests.</p>${impactGraph}${truncated ? '<p class="warn">The visual graph is limited to 12 nodes per lane; tables retain the complete data.</p>' : ''}<h3>User journey workflows</h3>${renderJourneyWorkflows(report)}`;
+}
+
+function renderJourneyWorkflows(report: ScenarioCoverageReport | undefined): string {
+  if (!report?.entries.length) return emptyState('No scenario workflows were found.');
+  const journeys = new Map<string, { title: string; entries: ScenarioCoverageReport['entries'][number][] }>();
+  for (const entry of report.entries) {
+    const id = entry.journeyId ?? 'unassigned';
+    const journey = journeys.get(id) ?? { title: entry.journeyTitle ?? 'Unassigned scenarios', entries: [] };
+    journey.entries.push(entry);
+    journeys.set(id, journey);
+  }
+  return [...journeys.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([journeyId, journey], journeyIndex) => {
+      const entries = journey.entries;
+      const indexById = new Map(entries.map((entry, index) => [entry.scenarioId, index]));
+      const width = Math.max(720, entries.length * 260 + 40);
+      const dependencies = entries.flatMap((entry, index) =>
+        (entry.dependsOn ?? [])
+          .filter((dependency) => indexById.has(dependency))
+          .map((dependency) => {
+            const dependencyIndex = indexById.get(dependency)!;
+            return `<line class="edge" x1="${dependencyIndex * 260 + 240}" y1="91" x2="${index * 260 + 280}" y2="91" marker-end="url(#journey-arrow-${journeyIndex})"/>`;
+          }),
+      );
+      const nodes = entries
+        .map((entry, index) => {
+          const tags = (entry.tags ?? []).join(', ') || 'unclassified';
+          return `<g><rect class="node scenario" x="${index * 260 + 20}" y="55" width="220" height="72" rx="10"/><text x="${index * 260 + 32}" y="79">${escapeHtml(shortLabel(entry.title ?? entry.scenarioId, 28))}</text><text class="lane" x="${index * 260 + 32}" y="101">${escapeHtml(shortLabel(tags, 28))}</text><text x="${index * 260 + 32}" y="119">${escapeHtml(entry.criticality ?? '-')}</text><title>${escapeHtml(`${entry.scenarioId} | ${tags} | depends on: ${(entry.dependsOn ?? []).join(', ') || 'none'}`)}</title></g>`;
+        })
+        .join('');
+      return `<div class="card"><h4>${escapeHtml(journey.title)} <span class="pill">${escapeHtml(journeyId)}</span></h4><div class="scroll"><svg class="graph" viewBox="0 0 ${width} 155" style="min-width:${width}px" role="img" aria-label="${escapeHtml(`${journey.title} scenario dependency workflow`)}"><defs><marker id="journey-arrow-${journeyIndex}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--line)"/></marker></defs>${dependencies.join('')}${nodes}</svg></div></div>`;
+    })
+    .join('');
+}
+
+function shortLabel(value: string, length = 34): string {
+  return value.length > length ? `${value.slice(0, length - 3)}...` : value;
+}
+
 function renderScenarios(report: ScenarioCoverageReport | undefined): string {
   if (!report) return emptyState('No scenario-coverage.json artifact was found.');
+  const countType = (type: string) =>
+    report.entries.filter((entry) => (entry.tags ?? []).some((tag) => tag.toLowerCase() === type)).length;
   const rows = report.entries
-    .map((entry) => `<tr><td><code>${escapeHtml(entry.scenarioId)}</code></td><td>${entry.testFiles.length}</td><td>${entry.resolvedCodePaths.length}</td><td>${entry.staticallyLinkedCodePaths.length}</td><td>${entry.observedRuntimeFiles.length}</td><td class="${entry.gaps.length ? 'bad' : 'good'}">${entry.gaps.length ? escapeHtml(entry.gaps.join('; ')) : 'Covered'}</td></tr>`)
+    .map((entry) => `<tr><td><code>${escapeHtml(entry.scenarioId)}</code>${entry.title ? `<div class="muted">${escapeHtml(entry.title)}</div>` : ''}</td><td>${(entry.tags ?? []).map((tag) => `<span class="pill">${escapeHtml(tag)}</span>`).join('') || '-'}</td><td>${escapeHtml(entry.criticality ?? '-')}</td><td>${entry.testFiles.length}</td><td>${entry.resolvedCodePaths.length}</td><td>${entry.staticallyLinkedCodePaths.length}</td><td>${entry.observedRuntimeFiles.length}</td><td class="${entry.gaps.length ? 'bad' : 'good'}">${entry.gaps.length ? escapeHtml(entry.gaps.join('; ')) : 'Covered'}</td></tr>`)
     .join('');
-  return `<div class="grid">${metricCard('Scenarios', String(report.entries.length))}${metricCard('Coverage gaps', String(report.gaps.length), report.gaps.length ? 'bad' : 'good')}${metricCard('Static links', String(report.entries.reduce((total, entry) => total + entry.staticallyLinkedCodePaths.length, 0)))}${metricCard('Runtime files', String(report.entries.reduce((total, entry) => total + entry.observedRuntimeFiles.length, 0)))}</div><div class="scroll"><table><thead><tr><th>Scenario</th><th>Tests</th><th>Declared files</th><th>Static links</th><th>Runtime observed</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  return `<div class="grid">${metricCard('Scenarios', String(report.entries.length))}${metricCard('Happy', String(countType('happy-path')))}${metricCard('Positive', String(countType('positive')))}${metricCard('Negative', String(countType('negative')))}${metricCard('Edge', String(countType('edge')))}${metricCard('Corner', String(countType('corner')))}${metricCard('Coverage gaps', String(report.gaps.length), report.gaps.length ? 'bad' : 'good')}${metricCard('Static links', String(report.entries.reduce((total, entry) => total + entry.staticallyLinkedCodePaths.length, 0)))}${metricCard('Runtime files', String(report.entries.reduce((total, entry) => total + entry.observedRuntimeFiles.length, 0)))}</div><div class="scroll"><table><thead><tr><th>Scenario</th><th>Types</th><th>Criticality</th><th>Tests</th><th>Declared files</th><th>Static links</th><th>Runtime observed</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function renderExecution(execution: ExecutionArtifact | undefined): string {

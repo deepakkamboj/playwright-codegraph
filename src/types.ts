@@ -76,6 +76,7 @@ export interface ScenarioDefinition {
   readonly id: string;
   readonly title: string;
   readonly actor?: string;
+  readonly dependsOn?: readonly string[];
   readonly criticality: 'critical' | 'high' | 'medium' | 'low';
   readonly requirementRefs: readonly string[];
   readonly owners: readonly string[];
@@ -103,6 +104,12 @@ export interface ScenarioRegistry {
 
 export interface ScenarioCoverageEntry {
   readonly scenarioId: string;
+  readonly title?: string;
+  readonly journeyId?: string;
+  readonly journeyTitle?: string;
+  readonly dependsOn?: readonly string[];
+  readonly criticality?: ScenarioDefinition['criticality'];
+  readonly tags?: readonly string[];
   readonly testFiles: readonly string[];
   readonly resolvedCodePaths: readonly string[];
   readonly staticallyLinkedCodePaths: readonly string[];

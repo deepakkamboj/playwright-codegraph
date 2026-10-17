@@ -1,5 +1,12 @@
 # playwright-codegraph
 
+[![CI](https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml/badge.svg)](https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml)
+![Node.js 20 and 22](https://img.shields.io/badge/Node.js-20%20%7C%2022-339933?logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-supported-2EAD33?logo=playwright&logoColor=white)
+![CodeGraph](https://img.shields.io/badge/CodeGraph-1.x-6F42C1)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 Deterministic, fail-open affected-test selection and scenario coverage for
 Rush-based TypeScript repositories. File-level reachability is provided by the
 required [`@colbymchenry/codegraph`](https://www.npmjs.com/package/@colbymchenry/codegraph)
@@ -39,6 +46,25 @@ coverage gaps, test changes, and release decisions.
 
 A standalone HTML dashboard combines code change, affected flows, selected
 tests, scenario coverage, CI execution, shadow safety, and replay history.
+
+## Unified HTML quality report
+
+[![CodeGraph unified quality report](./docs/codegraph-quality-report.png)](./docs/codegraph-quality-report-sample.html)
+
+The standalone dashboard combines scenario coverage, pull-request impact,
+selected unit and Playwright tests, full CI execution, shadow validation, and
+historical replay evidence. It also renders changed-code impact graphs and
+scenario dependency workflows using inline, accessible SVG. Eight built-in
+themes include two high-contrast options. Click the image to open the
+interactive sample.
+
+## Cloud, hybrid, and on-prem
+
+The deterministic data plane always runs inside the customer environment.
+Cloud, hybrid, and on-prem profiles control only policy, history, and artifact
+publication boundaries. See [DEPLOYMENT.md](./DEPLOYMENT.md), the versioned
+[deployment contract](./deployment-profile.schema.json), and the runnable
+[deployment examples](./examples/deployment).
 
 ## Reliability contract
 
@@ -85,6 +111,8 @@ deterministic and safe:
 - Versioned `customer journey -> user journey -> scenario` YAML registry.
 - Stable scenario IDs, actors, criticality, requirements, owners, tags, and
   declared code paths.
+- Explicit `dependsOn` relationships with YAML-order defaults, unknown
+  dependency validation, and cycle detection.
 - `@scenario` links from unit and Playwright tests.
 - Scenario-to-code-path validation using codegraph reachability.
 - Scenario safety edges that select linked tests when changed code matches a
@@ -101,6 +129,8 @@ deterministic and safe:
 - Human-readable Markdown scenario coverage matrix.
 - Standalone HTML dashboard for scenario, PR, full CI, shadow, and replay
   workflows.
+- Happy, positive, negative, edge, and corner coverage cards; eight themes;
+  changed-code impact graphs; and scenario workflow diagrams.
 - `explain` diagnostics for a single changed file.
 - Shadow execution where the full suite remains authoritative.
 - Replay aggregation for retained shadow records and missed-failure detection.

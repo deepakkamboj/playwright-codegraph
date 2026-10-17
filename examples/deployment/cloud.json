@@ -1,0 +1,17 @@
+{
+  "$schema": "../../deployment-profile.schema.json",
+  "schemaVersion": 1,
+  "mode": "cloud",
+  "execution": {
+    "location": "customer-environment",
+    "networkAccess": "egress-only"
+  },
+  "controlPlane": {
+    "endpoint": "https://codegraph.example.com",
+    "authentication": "workload-identity"
+  },
+  "artifacts": {
+    "publish": "full-report",
+    "redactPaths": true
+  }
+}

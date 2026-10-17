@@ -15,7 +15,23 @@ customerJourneys:
             owners:
               - commerce
             tags:
+              - happy-path
+              - positive
               - smoke
             codePaths:
               - apps/store/src/checkout/**
+              - packages/payments/src/**
+          - id: checkout.card-declined
+            title: Handle a declined card
+            dependsOn:
+              - checkout.card-payment
+            criticality: high
+            requirementRefs:
+              - REQ-CHECKOUT-2
+            owners:
+              - commerce
+            tags:
+              - negative
+              - recovery
+            codePaths:
               - packages/payments/src/**
