@@ -306,6 +306,10 @@ npm install --save-dev playwright-codegraph @colbymchenry/codegraph
 
 Node.js 20 or newer is required.
 
+For complete operational examples—including graph lifecycle, scenario
+authoring, pull-request selection, full CI runs, shadow/replay, artifacts, and
+troubleshooting—see the [usage guide](./USAGE.md).
+
 Copy the examples:
 
 ```bash
