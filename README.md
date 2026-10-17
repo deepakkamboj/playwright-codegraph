@@ -5,6 +5,9 @@ Rush-based TypeScript repositories. File-level reachability is provided by the
 required [`@colbymchenry/codegraph`](https://www.npmjs.com/package/@colbymchenry/codegraph)
 CLI.
 
+See [the product vision and feature roadmap](./NEW.md) for planned workspace,
+scenario-policy, reporting, AI-assisted, and enterprise capabilities.
+
 ## Reliability contract
 
 `playwright-codegraph` does not claim that networks, browsers, application code,
