@@ -6,12 +6,12 @@ export function scenarioCoverageMarkdown(report: ScenarioCoverageReport): string
     '',
     `Input fingerprint: \`${report.inputFingerprint}\``,
     '',
-    '| Scenario | Tests | Declared files | Static links | Runtime observed | Gaps |',
-    '|---|---:|---:|---:|---:|---|',
+    '| Scenario | Types | Criticality | Tests | Declared files | Static links | Runtime observed | Gaps |',
+    '|---|---|---|---:|---:|---:|---:|---|',
   ];
   for (const entry of report.entries) {
     lines.push(
-      `| ${escapeCell(entry.scenarioId)} | ${entry.testFiles.length} | ${entry.resolvedCodePaths.length} | ${entry.staticallyLinkedCodePaths.length} | ${entry.observedRuntimeFiles.length} | ${escapeCell(entry.gaps.join('; '))} |`,
+      `| ${escapeCell(entry.scenarioId)} | ${escapeCell((entry.tags ?? []).join(', '))} | ${entry.criticality ?? '-'} | ${entry.testFiles.length} | ${entry.resolvedCodePaths.length} | ${entry.staticallyLinkedCodePaths.length} | ${entry.observedRuntimeFiles.length} | ${escapeCell(entry.gaps.join('; '))} |`,
     );
   }
   lines.push('', report.gaps.length ? `**Coverage gate: FAIL (${report.gaps.length} gaps)**` : '**Coverage gate: PASS**', '');

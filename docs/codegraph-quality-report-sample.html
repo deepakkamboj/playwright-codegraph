@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:">
+  <title>Checkout PR #184 Quality Report</title>
+  <style>
+    :root,[data-theme="default"] { color-scheme:light; --bg:#f3f6fc; --panel:#ffffff; --card:#f8faff; --muted:#6b7a99; --text:#0f1b3d; --line:#dce4f2; --accent:#2457d6; --accent-fg:#ffffff; --good:#15803d; --warn:#b45309; --bad:#c81e3a; --hero-a:#16348f; --hero-b:#2457d6; --hero-fg:#ffffff; }
+    [data-theme="aquatic"] { color-scheme:light; --bg:#ecfeff; --panel:#ffffff; --card:#f0fdff; --muted:#0e7490; --text:#164e63; --line:#a5f3fc; --accent:#0284c7; --accent-fg:#ffffff; --good:#0d9488; --warn:#b45309; --bad:#e11d48; --hero-a:#075985; --hero-b:#0891b2; --hero-fg:#ffffff; }
+    [data-theme="forest"] { color-scheme:light; --bg:#f0fdf4; --panel:#ffffff; --card:#f7fef9; --muted:#166534; --text:#14532d; --line:#bbf7d0; --accent:#16a34a; --accent-fg:#ffffff; --good:#15803d; --warn:#a16207; --bad:#dc2626; --hero-a:#14532d; --hero-b:#16a34a; --hero-fg:#ffffff; }
+    [data-theme="sunset"] { color-scheme:light; --bg:#fff7ed; --panel:#ffffff; --card:#fffbf5; --muted:#9a3412; --text:#7c2d12; --line:#fed7aa; --accent:#ea580c; --accent-fg:#ffffff; --good:#15803d; --warn:#a16207; --bad:#dc2626; --hero-a:#9a3412; --hero-b:#ea580c; --hero-fg:#ffffff; }
+    [data-theme="midnight"] { color-scheme:dark; --bg:#030712; --panel:#111827; --card:#182235; --muted:#9ca3af; --text:#f9fafb; --line:#374151; --accent:#818cf8; --accent-fg:#0f172a; --good:#34d399; --warn:#fbbf24; --bad:#fb7185; --hero-a:#111827; --hero-b:#312e81; --hero-fg:#f9fafb; }
+    [data-theme="corporate"] { color-scheme:light; --bg:#f8fafc; --panel:#ffffff; --card:#f8fafc; --muted:#475569; --text:#0f172a; --line:#cbd5e1; --accent:#334155; --accent-fg:#ffffff; --good:#15803d; --warn:#b45309; --bad:#b91c1c; --hero-a:#0f172a; --hero-b:#334155; --hero-fg:#ffffff; }
+    [data-theme="hc-black"] { color-scheme:dark; --bg:#000000; --panel:#0d0d0d; --card:#1a1a1a; --muted:#d1d5db; --text:#ffffff; --line:#ffffff; --accent:#ffff00; --accent-fg:#000000; --good:#55efc4; --warn:#ffd93d; --bad:#ff6b6b; --hero-a:#000000; --hero-b:#000000; --hero-fg:#ffffff; }
+    [data-theme="hc-white"] { color-scheme:light; --bg:#ffffff; --panel:#ffffff; --card:#f5f5f5; --muted:#333333; --text:#000000; --line:#000000; --accent:#00008b; --accent-fg:#ffffff; --good:#006400; --warn:#7a4a00; --bad:#a40000; --hero-a:#ffffff; --hero-b:#ffffff; --hero-fg:#000000; }
+    * { box-sizing:border-box; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+    body { margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; }
+    header { padding:2rem max(1rem,5vw); border-bottom:1px solid var(--line); background:linear-gradient(135deg,var(--hero-a),var(--hero-b)); color:var(--hero-fg); }
+    h1,h2,h3 { line-height:1.2; }
+    h1 { margin:.25rem 0; font-size:clamp(1.8rem,4vw,3rem); }
+    h2 { margin-top:0; }
+    .eyebrow { color:var(--accent); font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    header .subtitle { color:var(--hero-fg); opacity:.85; } .muted { color:var(--muted); }
+    nav { display:flex; gap:.5rem; flex-wrap:wrap; padding:1rem max(1rem,5vw); position:sticky; top:0; background:rgba(11,16,32,.96); border-bottom:1px solid var(--line); z-index:2; }
+    button,select { border:1px solid var(--line); background:var(--panel); color:var(--text); padding:.55rem .8rem; border-radius:.5rem; }
+    button { cursor:pointer; }
+    button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
+    main { padding:1.5rem max(1rem,5vw) 4rem; }
+    section { margin:0 0 1.5rem; padding:1.25rem; background:var(--panel); border:1px solid var(--line); border-radius:.8rem; }
+    section[hidden] { display:none; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.8rem; }
+    .card { padding:1rem; border:1px solid var(--line); border-radius:.65rem; background:var(--card); }
+    .metric { font-size:1.65rem; font-weight:800; }
+    .good { color:var(--good); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:.15rem .55rem; margin:.1rem; font-size:.82rem; }
+    table { width:100%; border-collapse:collapse; margin-top:.75rem; }
+    th,td { padding:.65rem; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+    th { color:var(--muted); font-size:.85rem; text-transform:uppercase; }
+    code { color:#b9d1ff; overflow-wrap:anywhere; }
+    .scroll { overflow-x:auto; }
+    .empty { padding:1rem; border:1px dashed var(--line); color:var(--muted); border-radius:.5rem; }
+    #test-filter { width:100%; max-width:32rem; padding:.6rem; background:var(--card); color:var(--text); border:1px solid var(--line); border-radius:.5rem; }
+    .theme-control { margin-left:auto; display:flex; align-items:center; gap:.5rem; }
+    .theme-control label { color:var(--muted); }
+    .graph { width:100%; min-width:720px; height:auto; background:var(--card); border:1px solid var(--line); border-radius:.65rem; }
+    .graph text { fill:var(--text); font:12px Inter,Segoe UI,Arial,sans-serif; }
+    .graph .lane { fill:var(--muted); font-weight:700; text-transform:uppercase; }
+    .graph .edge { stroke:var(--line); stroke-width:2; }
+    .graph .node { fill:var(--panel); stroke:var(--accent); stroke-width:2; }
+    .graph .changed { stroke:var(--warn); } .graph .scenario { stroke:var(--accent); } .graph .test { stroke:var(--good); }
+    @media print { nav { display:none; } section[hidden] { display:block; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Deterministic quality intelligence</div>
+    <h1>Checkout PR #184 Quality Report</h1>
+    <p class="subtitle">Code change, scenario coverage, selected tests, CI execution, and safety evidence in one standalone report.</p>
+  </header>
+  <nav aria-label="Report sections">
+    <button type="button" data-target="overview" aria-controls="overview" aria-pressed="true">Overview</button>
+    <button type="button" data-target="pr-impact" aria-controls="pr-impact" aria-pressed="false">PR impact</button>
+    <button type="button" data-target="code-graph" aria-controls="code-graph" aria-pressed="false">Code graph</button>
+    <button type="button" data-target="scenarios" aria-controls="scenarios" aria-pressed="false">Scenarios</button>
+    <button type="button" data-target="execution" aria-controls="execution" aria-pressed="false">CI execution</button>
+    <button type="button" data-target="safety" aria-controls="safety" aria-pressed="false">Shadow and replay</button>
+    <div class="theme-control"><label for="theme-select">Theme</label><select id="theme-select" aria-label="Report theme"><option value="default">Light</option><option value="aquatic">Aquatic</option><option value="forest">Forest</option><option value="sunset">Sunset</option><option value="midnight">Midnight</option><option value="corporate">Corporate</option><option value="hc-black">High contrast black</option><option value="hc-white">High contrast white</option></select></div>
+  </nav>
+  <main>
+    <section id="overview" data-report-section>
+      <h2>Unified quality view</h2>
+      <div class="grid">
+        <div class="card"><div class="muted">Overall status</div><div class="metric good">Ready</div></div>
+        <div class="card"><div class="muted">Plan mode</div><div class="metric good">selective</div></div>
+        <div class="card"><div class="muted">Selected tests</div><div class="metric ">6</div></div>
+        <div class="card"><div class="muted">Scenarios</div><div class="metric ">5</div></div>
+        <div class="card"><div class="muted">Scenario gaps</div><div class="metric good">0</div></div>
+        <div class="card"><div class="muted">Execution</div><div class="metric good">Passed</div></div>
+      </div>
+      <h3>Input fingerprint</h3><code>sha256:7ac99f5c3cf8c573b5ad99139e257867d9367b75fe60a5c468d550871f54f93a</code>
+      
+    </section>
+    <section id="pr-impact" data-report-section hidden>
+      <h2>Pull-request impact</h2>
+      <div class="grid"><div class="card"><div class="muted">Changed files</div><div class="metric ">4</div></div><div class="card"><div class="muted">Changed projects</div><div class="metric ">3</div></div><div class="card"><div class="muted">Selected tests</div><div class="metric ">6</div></div></div><h3>Changed projects</h3><p><span class="pill">@commerce/cart</span><span class="pill">@commerce/payments</span><span class="pill">@commerce/store</span></p><h3>Changed files</h3><div class="scroll"><table><thead><tr><th>Status</th><th>Source</th><th>Path</th></tr></thead><tbody><tr><td>modified</td><td>merge-base</td><td><code>packages/payments/src/card/authorize.ts</code></td></tr><tr><td>modified</td><td>merge-base</td><td><code>packages/cart/src/quantity.ts</code></td></tr><tr><td>modified</td><td>merge-base</td><td><code>apps/store/src/checkout/summary.ts</code></td></tr><tr><td>modified</td><td>merge-base</td><td><code>apps/store/src/checkout/summary.test.ts</code></td></tr></tbody></table></div><h3>Prioritized tests</h3><label for="test-filter">Filter selected tests</label><br><input id="test-filter" type="search" placeholder="Path, project, kind, or reason"><div class="scroll"><table><thead><tr><th>Kind</th><th>Bucket</th><th>Test</th><th>Project</th><th>Reasons</th></tr></thead><tbody><tr data-test-row><td>unit</td><td>full</td><td><code>packages/payments/src/card/authorize.test.ts</code></td><td>@commerce/payments</td><td><span class="pill">codegraph-reachable</span><span class="pill">covers</span></td></tr><tr data-test-row><td>unit</td><td>full</td><td><code>packages/payments/src/card/declined.test.ts</code></td><td>@commerce/payments</td><td><span class="pill">codegraph-reachable</span><span class="pill">covers</span></td></tr><tr data-test-row><td>unit</td><td>full</td><td><code>packages/cart/src/quantity.test.ts</code></td><td>@commerce/cart</td><td><span class="pill">codegraph-reachable</span></td></tr><tr data-test-row><td>unit</td><td>full</td><td><code>apps/store/src/checkout/summary.test.ts</code></td><td>@commerce/store</td><td><span class="pill">changed-test</span></td></tr><tr data-test-row><td>playwright</td><td>core</td><td><code>apps/e2e/tests/checkout/card-payment.spec.ts</code></td><td>@commerce/e2e</td><td><span class="pill">mapping</span><span class="pill">core-safety</span></td></tr><tr data-test-row><td>playwright</td><td>smoke</td><td><code>apps/e2e/tests/checkout/maximum-quantity.spec.ts</code></td><td>@commerce/e2e</td><td><span class="pill">covers</span><span class="pill">smoke-safety</span></td></tr></tbody></table></div>
+    </section>
+    <section id="code-graph" data-report-section hidden>
+      <h2>Code graph</h2>
+      <p class="muted">Deterministic traceability from changed code through scenario coverage to tests. The graph uses only report artifacts and makes no network requests.</p><div class="scroll"><svg class="graph" viewBox="0 0 910 404" role="img" aria-labelledby="impact-graph-title impact-graph-desc"><title id="impact-graph-title">Code change impact graph</title><desc id="impact-graph-desc">Changed files connect to covered scenarios, which connect to selected tests.</desc><defs><marker id="impact-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--line)"/></marker></defs><text class="lane" x="20" y="25">Changed files</text><text class="lane" x="330" y="25">Scenarios</text><text class="lane" x="640" y="25">Tests</text><line class="edge" x1="270" y1="61" x2="330" y2="61" marker-end="url(#impact-arrow)"/><line class="edge" x1="270" y1="177" x2="330" y2="61" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="61" x2="640" y2="293" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="61" x2="640" y2="61" marker-end="url(#impact-arrow)"/><line class="edge" x1="270" y1="61" x2="330" y2="119" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="119" x2="640" y2="351" marker-end="url(#impact-arrow)"/><line class="edge" x1="270" y1="119" x2="330" y2="177" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="177" x2="640" y2="235" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="177" x2="640" y2="119" marker-end="url(#impact-arrow)"/><line class="edge" x1="270" y1="177" x2="330" y2="235" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="235" x2="640" y2="177" marker-end="url(#impact-arrow)"/><line class="edge" x1="270" y1="177" x2="330" y2="293" marker-end="url(#impact-arrow)"/><line class="edge" x1="580" y1="293" x2="640" y2="61" marker-end="url(#impact-arrow)"/><g><rect class="node changed" x="20" y="42" width="250" height="38" rx="8"/><text x="30" y="66">packages/payments/src/card/auth...</text><title>packages/payments/src/card/authorize.ts</title></g><g><rect class="node changed" x="20" y="100" width="250" height="38" rx="8"/><text x="30" y="124">packages/cart/src/quantity.ts</text><title>packages/cart/src/quantity.ts</title></g><g><rect class="node changed" x="20" y="158" width="250" height="38" rx="8"/><text x="30" y="182">apps/store/src/checkout/summary.ts</text><title>apps/store/src/checkout/summary.ts</title></g><g><rect class="node changed" x="20" y="216" width="250" height="38" rx="8"/><text x="30" y="240">apps/store/src/checkout/summary...</text><title>apps/store/src/checkout/summary.test.ts</title></g><g><rect class="node scenario" x="330" y="42" width="250" height="38" rx="8"/><text x="340" y="66">Authorize card payment</text><title>Authorize card payment</title></g><g><rect class="node scenario" x="330" y="100" width="250" height="38" rx="8"/><text x="340" y="124">Handle declined card</text><title>Handle declined card</title></g><g><rect class="node scenario" x="330" y="158" width="250" height="38" rx="8"/><text x="340" y="182">Validate maximum quantity</text><title>Validate maximum quantity</title></g><g><rect class="node scenario" x="330" y="216" width="250" height="38" rx="8"/><text x="340" y="240">Review order summary</text><title>Review order summary</title></g><g><rect class="node scenario" x="330" y="274" width="250" height="38" rx="8"/><text x="340" y="298">Protect unusual order input</text><title>Protect unusual order input</title></g><g><rect class="node test" x="640" y="42" width="250" height="38" rx="8"/><text x="650" y="66">apps/e2e/tests/checkout/card-pa...</text><title>apps/e2e/tests/checkout/card-payment.spec.ts</title></g><g><rect class="node test" x="640" y="100" width="250" height="38" rx="8"/><text x="650" y="124">apps/e2e/tests/checkout/maximum...</text><title>apps/e2e/tests/checkout/maximum-quantity.spec.ts</title></g><g><rect class="node test" x="640" y="158" width="250" height="38" rx="8"/><text x="650" y="182">apps/store/src/checkout/summary...</text><title>apps/store/src/checkout/summary.test.ts</title></g><g><rect class="node test" x="640" y="216" width="250" height="38" rx="8"/><text x="650" y="240">packages/cart/src/quantity.test.ts</text><title>packages/cart/src/quantity.test.ts</title></g><g><rect class="node test" x="640" y="274" width="250" height="38" rx="8"/><text x="650" y="298">packages/payments/src/card/auth...</text><title>packages/payments/src/card/authorize.test.ts</title></g><g><rect class="node test" x="640" y="332" width="250" height="38" rx="8"/><text x="650" y="356">packages/payments/src/card/decl...</text><title>packages/payments/src/card/declined.test.ts</title></g></svg></div><h3>User journey workflows</h3><div class="card"><h4>Complete checkout <span class="pill">checkout</span></h4><div class="scroll"><svg class="graph" viewBox="0 0 1340 155" style="min-width:1340px" role="img" aria-label="Complete checkout scenario dependency workflow"><defs><marker id="journey-arrow-0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--line)"/></marker></defs><line class="edge" x1="240" y1="91" x2="540" y2="91" marker-end="url(#journey-arrow-0)"/><line class="edge" x1="240" y1="91" x2="800" y2="91" marker-end="url(#journey-arrow-0)"/><line class="edge" x1="760" y1="91" x2="1060" y2="91" marker-end="url(#journey-arrow-0)"/><line class="edge" x1="1020" y1="91" x2="1320" y2="91" marker-end="url(#journey-arrow-0)"/><g><rect class="node scenario" x="20" y="55" width="220" height="72" rx="10"/><text x="32" y="79">Authorize card payment</text><text class="lane" x="32" y="101">happy-path, positive, smoke</text><text x="32" y="119">critical</text><title>checkout.card.happy-path | happy-path, positive, smoke | depends on: none</title></g><g><rect class="node scenario" x="280" y="55" width="220" height="72" rx="10"/><text x="292" y="79">Handle declined card</text><text class="lane" x="292" y="101">negative, recovery</text><text x="292" y="119">high</text><title>checkout.card.declined | negative, recovery | depends on: checkout.card.happy-path</title></g><g><rect class="node scenario" x="540" y="55" width="220" height="72" rx="10"/><text x="552" y="79">Validate maximum quantity</text><text class="lane" x="552" y="101">edge</text><text x="552" y="119">medium</text><title>checkout.quantity.maximum | edge | depends on: checkout.card.happy-path</title></g><g><rect class="node scenario" x="800" y="55" width="220" height="72" rx="10"/><text x="812" y="79">Review order summary</text><text class="lane" x="812" y="101">positive</text><text x="812" y="119">high</text><title>checkout.summary.normal | positive | depends on: checkout.quantity.maximum</title></g><g><rect class="node scenario" x="1060" y="55" width="220" height="72" rx="10"/><text x="1072" y="79">Protect unusual order input</text><text class="lane" x="1072" y="101">corner, security</text><text x="1072" y="119">critical</text><title>checkout.order.security | corner, security | depends on: checkout.summary.normal</title></g></svg></div></div>
+    </section>
+    <section id="scenarios" data-report-section hidden>
+      <h2>Scenario coverage</h2>
+      <div class="grid"><div class="card"><div class="muted">Scenarios</div><div class="metric ">5</div></div><div class="card"><div class="muted">Happy</div><div class="metric ">1</div></div><div class="card"><div class="muted">Positive</div><div class="metric ">2</div></div><div class="card"><div class="muted">Negative</div><div class="metric ">1</div></div><div class="card"><div class="muted">Edge</div><div class="metric ">1</div></div><div class="card"><div class="muted">Corner</div><div class="metric ">1</div></div><div class="card"><div class="muted">Coverage gaps</div><div class="metric good">0</div></div><div class="card"><div class="muted">Static links</div><div class="metric ">6</div></div><div class="card"><div class="muted">Runtime files</div><div class="metric ">5</div></div></div><div class="scroll"><table><thead><tr><th>Scenario</th><th>Types</th><th>Criticality</th><th>Tests</th><th>Declared files</th><th>Static links</th><th>Runtime observed</th><th>Status</th></tr></thead><tbody><tr><td><code>checkout.card.happy-path</code><div class="muted">Authorize card payment</div></td><td><span class="pill">happy-path</span><span class="pill">positive</span><span class="pill">smoke</span></td><td>critical</td><td>2</td><td>2</td><td>2</td><td>2</td><td class="good">Covered</td></tr><tr><td><code>checkout.card.declined</code><div class="muted">Handle declined card</div></td><td><span class="pill">negative</span><span class="pill">recovery</span></td><td>high</td><td>1</td><td>1</td><td>1</td><td>1</td><td class="good">Covered</td></tr><tr><td><code>checkout.quantity.maximum</code><div class="muted">Validate maximum quantity</div></td><td><span class="pill">edge</span></td><td>medium</td><td>2</td><td>1</td><td>1</td><td>1</td><td class="good">Covered</td></tr><tr><td><code>checkout.summary.normal</code><div class="muted">Review order summary</div></td><td><span class="pill">positive</span></td><td>high</td><td>1</td><td>1</td><td>1</td><td>1</td><td class="good">Covered</td></tr><tr><td><code>checkout.order.security</code><div class="muted">Protect unusual order input</div></td><td><span class="pill">corner</span><span class="pill">security</span></td><td>critical</td><td>1</td><td>1</td><td>1</td><td>0</td><td class="good">Covered</td></tr></tbody></table></div>
+    </section>
+    <section id="execution" data-report-section hidden>
+      <h2>CI execution</h2>
+      <div class="grid"><div class="card"><div class="muted">Mode</div><div class="metric ">selective</div></div><div class="card"><div class="muted">Exit code</div><div class="metric good">0</div></div><div class="card"><div class="muted">Commands</div><div class="metric ">2</div></div></div><div class="scroll"><table><thead><tr><th>Kind</th><th>Executable</th><th>Arguments</th><th>Exit</th></tr></thead><tbody><tr><td>unit</td><td><code>node</code></td><td><code>vitest.mjs run 4 selected files</code></td><td class="good">0</td></tr><tr><td>playwright</td><td><code>node</code></td><td><code>playwright test 2 selected files</code></td><td class="good">0</td></tr></tbody></table></div>
+    </section>
+    <section id="safety" data-report-section hidden>
+      <h2>Shadow and replay safety</h2>
+      <h3>Latest shadow execution</h3><div class="grid"><div class="card"><div class="muted">Selective exit</div><div class="metric good">0</div></div><div class="card"><div class="muted">Full exit</div><div class="metric good">0</div></div><div class="card"><div class="muted">Missed failure</div><div class="metric good">No</div></div></div><h3>Historical replay</h3><div class="grid"><div class="card"><div class="muted">Records</div><div class="metric ">148</div></div><div class="card"><div class="muted">Selective passes</div><div class="metric ">142</div></div><div class="card"><div class="muted">Full failures</div><div class="metric warn">6</div></div><div class="card"><div class="muted">Missed failures</div><div class="metric good">0</div></div><div class="card"><div class="muted">Fallback runs</div><div class="metric ">9</div></div></div>
+    </section>
+  </main>
+  <script>
+    const buttons = [...document.querySelectorAll('nav button')];
+    const sections = [...document.querySelectorAll('[data-report-section]')];
+    for (const button of buttons) button.addEventListener('click', () => {
+      for (const candidate of buttons) candidate.setAttribute('aria-pressed', String(candidate === button));
+      for (const section of sections) section.hidden = section.id !== button.dataset.target;
+    });
+    const filter = document.querySelector('#test-filter');
+    if (filter) filter.addEventListener('input', () => {
+      const query = filter.value.toLowerCase();
+      for (const row of document.querySelectorAll('[data-test-row]')) row.hidden = !row.textContent.toLowerCase().includes(query);
+    });
+    const themeSelect = document.querySelector('#theme-select');
+    const applyTheme = (theme) => {
+      document.documentElement.dataset.theme = theme;
+      try { localStorage.setItem('playwright-codegraph-theme', theme); } catch {}
+    };
+    if (themeSelect) {
+      let saved = null;
+      try { saved = localStorage.getItem('playwright-codegraph-theme'); } catch {}
+      const available = [...themeSelect.options].map((option) => option.value);
+      const preferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'midnight' : 'default';
+      themeSelect.value = available.includes(saved) ? saved : preferred;
+      applyTheme(themeSelect.value);
+      themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "$schema": "../../deployment-profile.schema.json",
+  "schemaVersion": 1,
+  "mode": "on-prem",
+  "execution": {
+    "location": "customer-environment",
+    "networkAccess": "none"
+  },
+  "artifacts": {
+    "publish": "local-only",
+    "redactPaths": false
+  }
+}

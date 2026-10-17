@@ -123,3 +123,25 @@ test('scenario coverage gaps fail open even when codegraph selected a test', () 
   assert.equal(plan.mode, 'full');
   assert.equal(plan.fullRunReasons[0]?.code, 'unsafe-input');
 });
+
+test('explicit full mode inventories every test with a deterministic reason', () => {
+  const data = fixture();
+  const plan = selectTests({
+    root: data.root,
+    baseRef: 'HEAD',
+    mergeBase: 'a'.repeat(40),
+    config: DEFAULT_CONFIG,
+    workspace: data.workspace,
+    changedFiles: [],
+    repositoryFiles: data.files,
+    codegraphVersion: '1.6.2',
+    codegraphAffectedTests: [],
+    scenarios: data.scenarios,
+    forceFull: true,
+  });
+
+  assert.equal(plan.mode, 'full');
+  assert.equal(plan.tests.length, 2);
+  assert.equal(plan.fullRunReasons[0]?.code, 'manual-full-run');
+  assert.ok(plan.tests.every((selected) => selected.reasons.some((reason) => reason.code === 'full-fallback')));
+});

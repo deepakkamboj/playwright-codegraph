@@ -32,6 +32,9 @@ jobs:
       - run: npx playwright-codegraph scenarios
       - run: npx playwright-codegraph plan --base origin/${{ github.base_ref }}
       - run: npx playwright-codegraph run
+      - name: Generate standalone quality report
+        if: always()
+        run: npx playwright-codegraph report --title "Pull Request Quality Report"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

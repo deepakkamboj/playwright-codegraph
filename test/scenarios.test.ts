@@ -45,9 +45,16 @@ customerJourneys:
             owners: [commerce]
             tags: [smoke]
             codePaths: [packages/cart/src/**]
+          - id: checkout.review-cart
+            title: Review cart
+            criticality: high
+            requirementRefs: [REQ-2]
+            owners: [commerce]
+            tags: [happy-path]
+            codePaths: [packages/cart/src/**]
 `,
   );
-  write(root, 'apps/e2e/cart.spec.ts', `// @scenario checkout.add-cart\n`);
+  write(root, 'apps/e2e/cart.spec.ts', `// @scenario checkout.add-cart\n// @scenario checkout.review-cart\n`);
   write(root, 'packages/cart/src/cart.ts', 'export const cart = [];');
   const files = ['apps/e2e/cart.spec.ts', 'packages/cart/src/cart.ts'];
 
@@ -56,7 +63,44 @@ customerJourneys:
 
   assert.deepEqual(inventory.testsByScenario.get('checkout.add-cart'), ['apps/e2e/cart.spec.ts']);
   assert.deepEqual(report.entries[0]?.staticallyLinkedCodePaths, ['packages/cart/src/cart.ts']);
+  assert.deepEqual(report.entries[1]?.dependsOn, ['checkout.add-cart']);
+  assert.equal(report.entries[1]?.journeyId, 'checkout');
   assert.deepEqual(report.gaps, []);
+});
+
+test('scenario dependency cycles fail validation', () => {
+  const root = temporaryRepository();
+  write(
+    root,
+    'test-scenarios.yml',
+    `schemaVersion: 1
+customerJourneys:
+  - id: commerce
+    title: Commerce
+    userJourneys:
+      - id: checkout
+        title: Checkout
+        scenarios:
+          - id: checkout.first
+            title: First
+            dependsOn: [checkout.second]
+            criticality: high
+            requirementRefs: []
+            owners: []
+            tags: []
+            codePaths: []
+          - id: checkout.second
+            title: Second
+            dependsOn: [checkout.first]
+            criticality: high
+            requirementRefs: []
+            owners: []
+            tags: []
+            codePaths: []
+`,
+  );
+
+  assert.throws(() => loadScenarioInventory(root, 'test-scenarios.yml', []), /dependency cycle/);
 });
 
 test('unknown scenario annotations fail validation', () => {

@@ -1,9 +1,70 @@
 # playwright-codegraph
 
+[![CI](https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml/badge.svg)](https://github.com/deepakkamboj/playwright-codegraph/actions/workflows/ci.yml)
+![Node.js 20 and 22](https://img.shields.io/badge/Node.js-20%20%7C%2022-339933?logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-supported-2EAD33?logo=playwright&logoColor=white)
+![CodeGraph](https://img.shields.io/badge/CodeGraph-1.x-6F42C1)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 Deterministic, fail-open affected-test selection and scenario coverage for
 Rush-based TypeScript repositories. File-level reachability is provided by the
 required [`@colbymchenry/codegraph`](https://www.npmjs.com/package/@colbymchenry/codegraph)
 CLI.
+
+## Why CodeGraph
+
+### A complete, reliable map of your code
+
+CodeGraph maps Rush projects, source dependencies, scenarios, and tests to show
+what changed and what it can impact. Deterministic analysis catches small
+dependency changes that general-purpose text reasoning can miss.
+
+### Tracks real code change
+
+Source files and dependency relationships drive impact analysis directly.
+Every selected test has explicit, inspectable reasons.
+
+### Faster, easier QA
+
+PR workflows prioritize impacted unit and Playwright tests without manual
+triage. Any uncertainty safely expands to full execution rather than silently
+dropping coverage.
+
+### Full-stack testing
+
+Unit, integration, and end-to-end tests share one plan, scenario model,
+execution path, and quality report.
+
+### Human control built in
+
+Automation handles graph synchronization, impact analysis, orchestration, and
+reporting. Developers and QA teams retain control over scenario definitions,
+coverage gaps, test changes, and release decisions.
+
+### Unified quality view
+
+A standalone HTML dashboard combines code change, affected flows, selected
+tests, scenario coverage, CI execution, shadow safety, and replay history.
+
+## Unified HTML quality report
+
+[![CodeGraph unified quality report](./docs/codegraph-quality-report.png)](./docs/codegraph-quality-report-sample.html)
+
+The standalone dashboard combines scenario coverage, pull-request impact,
+selected unit and Playwright tests, full CI execution, shadow validation, and
+historical replay evidence. It also renders changed-code impact graphs and
+scenario dependency workflows using inline, accessible SVG. Eight built-in
+themes include two high-contrast options. Click the image to open the
+interactive sample.
+
+## Cloud, hybrid, and on-prem
+
+The deterministic data plane always runs inside the customer environment.
+Cloud, hybrid, and on-prem profiles control only policy, history, and artifact
+publication boundaries. See [DEPLOYMENT.md](./DEPLOYMENT.md), the versioned
+[deployment contract](./deployment-profile.schema.json), and the runnable
+[deployment examples](./examples/deployment).
 
 ## Reliability contract
 
@@ -50,6 +111,8 @@ deterministic and safe:
 - Versioned `customer journey -> user journey -> scenario` YAML registry.
 - Stable scenario IDs, actors, criticality, requirements, owners, tags, and
   declared code paths.
+- Explicit `dependsOn` relationships with YAML-order defaults, unknown
+  dependency validation, and cycle detection.
 - `@scenario` links from unit and Playwright tests.
 - Scenario-to-code-path validation using codegraph reachability.
 - Scenario safety edges that select linked tests when changed code matches a
@@ -64,6 +127,10 @@ deterministic and safe:
 - Canonical JSON selection, execution, scenario coverage, shadow, and replay
   artifacts.
 - Human-readable Markdown scenario coverage matrix.
+- Standalone HTML dashboard for scenario, PR, full CI, shadow, and replay
+  workflows.
+- Happy, positive, negative, edge, and corner coverage cards; eight themes;
+  changed-code impact graphs; and scenario workflow diagrams.
 - `explain` diagnostics for a single changed file.
 - Shadow execution where the full suite remains authoritative.
 - Replay aggregation for retained shadow records and missed-failure detection.
@@ -88,6 +155,7 @@ flowchart LR
     CLI --> ScenarioCommand["Scenario coverage command"]
     CLI --> Executor["Safe executor<br/>executor.ts"]
     CLI --> Shadow["Shadow + replay<br/>shadow.ts / replay.ts"]
+    CLI --> HtmlReport["Standalone HTML report<br/>html-report.ts"]
 
     Planner --> Git["Git change detector<br/>git.ts"]
     Planner --> Rush["Rush workspace model<br/>rush.ts"]
@@ -107,16 +175,22 @@ flowchart LR
     Scenarios --> Selector
 
     Selector --> Plan[("Canonical plan.json")]
+    Plan --> HtmlReport
     Plan --> Executor
     Executor --> Unit["Unit-test runner"]
     Executor --> Playwright["Playwright runner"]
     Executor --> Execution[("execution.json")]
+    Execution --> HtmlReport
 
     ScenarioCommand --> Scenarios
     Scenarios --> ScenarioReport[("scenario-coverage.json / .md")]
+    ScenarioReport --> HtmlReport
     Shadow --> Executor
     Shadow --> ShadowRecord[("shadow.json")]
+    ShadowRecord --> HtmlReport
     ShadowRecord --> Replay[("replay.json")]
+    Replay --> HtmlReport
+    HtmlReport --> ReportFile[("codegraph-report.html")]
 ```
 
 The boundaries are intentional:
@@ -306,6 +380,9 @@ npm install --save-dev playwright-codegraph @colbymchenry/codegraph
 
 Node.js 20 or newer is required.
 
+For standalone scenario, PR, CI, shadow, and replay dashboards, see
+[HTML reporting](./REPORTING.md).
+
 Copy the examples:
 
 ```bash
@@ -361,6 +438,9 @@ npx playwright-codegraph doctor
 npx playwright-codegraph plan --base origin/main
 npx playwright-codegraph run
 
+# Generate one standalone Scenario / PR / CI quality dashboard
+npx playwright-codegraph report
+
 # Measure safety: the full result is authoritative
 npx playwright-codegraph shadow --base origin/main
 
@@ -381,6 +461,7 @@ Outputs default to:
 - `test-selection-out/scenario-coverage.md`
 - `test-selection-out/shadow.json`
 - `test-selection-out/replay.json`
+- `test-selection-out/codegraph-report.html`
 
 The scenario command exits with code 2 when the registry has coverage gaps.
 

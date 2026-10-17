@@ -1,0 +1,17 @@
+{
+  "$schema": "../../deployment-profile.schema.json",
+  "schemaVersion": 1,
+  "mode": "hybrid",
+  "execution": {
+    "location": "customer-environment",
+    "networkAccess": "private-link"
+  },
+  "controlPlane": {
+    "endpoint": "https://codegraph.internal.example.com",
+    "authentication": "mutual-tls"
+  },
+  "artifacts": {
+    "publish": "metadata-only",
+    "redactPaths": true
+  }
+}
