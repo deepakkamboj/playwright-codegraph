@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/deepakkamboj/playwright-codegraph.git"
   },
-  "homepage": "https://github.com/deepakkamboj/playwright-codegraph#readme",
+  "homepage": "https://deepakkamboj.github.io/playwright-codegraph/",
   "bugs": {
     "url": "https://github.com/deepakkamboj/playwright-codegraph/issues"
   },
@@ -25,6 +25,8 @@
   "files": [
     "dist",
     "examples",
+    "assets/playwright-codegraph-logo.svg",
+    "assets/playwright-codegraph-mark.svg",
     "deployment-profile.schema.json",
     "playwright-codegraph.config.example.json",
     "test-scenarios.example.yml",

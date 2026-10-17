@@ -3,8 +3,17 @@ import type { DocsThemeConfig } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
   logo: (
-    <span style={{ fontWeight: 750 }} translate="no">
-      playwright-<span style={{ color: "#5b7cfa" }}>codegraph</span>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 750 }} translate="no">
+      <img
+        src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/playwright-codegraph-mark.svg`}
+        alt=""
+        aria-hidden="true"
+        width="32"
+        height="32"
+      />
+      <span>
+        playwright-<span style={{ color: "#9a5b3b" }}>codegraph</span>
+      </span>
     </span>
   ),
   project: {
@@ -25,7 +34,7 @@ const config: DocsThemeConfig = {
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="theme-color" content="#4263eb" />
+      <meta name="theme-color" content="#f7eadf" />
       <link rel="icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/favicon.svg`} type="image/svg+xml" />
       <meta
         name="description"
@@ -33,7 +42,7 @@ const config: DocsThemeConfig = {
       />
     </>
   ),
-  color: { hue: 228, saturation: 82 },
+  color: { hue: 24, saturation: 52 },
   darkMode: true,
 };
 
