@@ -59,3 +59,11 @@ jobs:
       - name: Assert selective cross-project plan
         run: node -e "const p=require('./test-selection-out/plan.json'); if(p.mode!=='selective'||p.tests.length!==3) throw new Error(JSON.stringify(p))"
       - run: npm run run:selected
+      - name: Generate standalone example report
+        if: always()
+        run: npm run report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rush-example-quality-report
+          path: examples/rush-two-package/test-selection-out/

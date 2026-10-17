@@ -53,6 +53,7 @@ export interface FullRunReason {
     | 'invalid-config'
     | 'unknown-file'
     | 'selection-limit'
+    | 'manual-full-run'
     | 'unsafe-input';
   readonly detail: string;
 }

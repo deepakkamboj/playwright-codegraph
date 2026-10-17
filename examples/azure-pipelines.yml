@@ -34,6 +34,9 @@ steps:
     displayName: Create deterministic plan
   - script: npx playwright-codegraph run
     displayName: Run selected tests
+  - script: npx playwright-codegraph report --title "Build $(Build.BuildNumber) Quality"
+    condition: always()
+    displayName: Generate standalone quality report
   - task: PublishPipelineArtifact@1
     condition: always()
     inputs:

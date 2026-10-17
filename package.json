@@ -29,6 +29,7 @@
     "test-scenarios.example.yml",
     "LICENSE",
     "README.md",
+    "REPORTING.md",
     "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
