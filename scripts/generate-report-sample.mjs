@@ -193,6 +193,7 @@ write('replay.json', {
 });
 
 const outputFiles = [
+  path.resolve('assets/codegraph-quality-report-sample.html'),
   path.resolve('docs/codegraph-quality-report-sample.html'),
   path.resolve('docs/public/codegraph-quality-report-sample.html'),
 ];
