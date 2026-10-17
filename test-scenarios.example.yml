@@ -1,0 +1,21 @@
+schemaVersion: 1
+customerJourneys:
+  - id: commerce
+    title: Commerce
+    userJourneys:
+      - id: checkout
+        title: Complete checkout
+        actor: shopper
+        scenarios:
+          - id: checkout.card-payment
+            title: Pay by card
+            criticality: critical
+            requirementRefs:
+              - REQ-CHECKOUT-1
+            owners:
+              - commerce
+            tags:
+              - smoke
+            codePaths:
+              - apps/store/src/checkout/**
+              - packages/payments/src/**
