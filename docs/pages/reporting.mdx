@@ -1,0 +1,89 @@
+---
+title: Quality Reports
+---
+
+import Diagram from "../components/Diagram";
+
+# Quality Reports
+
+Generate one standalone dashboard for scenario coverage, pull-request impact,
+execution, shadow validation, and replay history.
+
+```bash
+npx playwright-codegraph report \
+  --artifacts test-selection-out \
+  --out artifacts/pr-quality-report.html \
+  --title "Checkout Pull Request Quality"
+```
+
+## Report Structure
+
+The interface follows the Playwright AI Reporter application structure:
+
+- Branded header with run pills
+- Counted tabs and status strip
+- Hero quality metrics
+- Responsive panel hierarchy
+- URL-addressable tab state
+- 8 persisted themes, including 2 high-contrast themes
+- Print mode that includes every section
+
+## Report Sections
+
+### Overview
+
+Shows plan mode, selected-test count, scenario count, coverage gaps, execution
+status, fingerprint, and fallback posture.
+
+### Pull Request Impact
+
+Shows changed files, changed projects, selected unit and Playwright tests,
+selection buckets, and reason codes.
+
+### Code Graph
+
+Connects changed file nodes to scenario nodes and then to selected test nodes.
+The journey workflow renders each scenario as a node with directional
+dependency arrows.
+
+### Scenario Coverage
+
+Shows happy-path, positive, negative, edge, and corner counts alongside
+criticality, declared code paths, static links, runtime observations, and gaps.
+
+### Execution and Safety
+
+Shows runner commands, exit codes, shadow comparisons, replay history,
+fallback frequency, and missed failures.
+
+<Diagram
+  src="/codegraph-quality-report.png"
+  alt="Standalone CodeGraph quality report with overview metrics, code-impact graph, scenario workflow, selected tests, and safety evidence."
+  caption="The report is self-contained, responsive, keyboard accessible, printable, and safe to publish as a CI artifact."
+/>
+
+## Standalone Security
+
+- Inline CSS and JavaScript only
+- No external fonts, scripts, stylesheets, or network requests
+- Strict Content Security Policy
+- Escaped repository paths, titles, arguments, and reason text
+- Injection-negative regression tests
+
+## Publish from GitHub Actions
+
+```yaml
+- name: Generate quality report
+  if: always()
+  run: npx playwright-codegraph report --title "PR Quality"
+
+- name: Publish quality report
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: codegraph-quality-report
+    path: test-selection-out/
+```
+
+If no recognized artifact exists, report generation fails instead of creating
+a success-shaped empty dashboard.
