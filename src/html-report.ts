@@ -89,7 +89,7 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
         ? 'Safe fallback'
         : 'Ready';
   return `<!doctype html>
-<html lang="en" data-theme="midnight">
+<html lang="en" data-theme="default">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -140,66 +140,103 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
     .graph .edge { stroke:var(--line); stroke-width:2; }
     .graph .node { fill:var(--panel); stroke:var(--accent); stroke-width:2; }
     .graph .changed { stroke:var(--warn); } .graph .scenario { stroke:var(--accent); } .graph .test { stroke:var(--good); }
-    @media print { nav { display:none; } section[hidden] { display:block; } }
+    .app-header { padding:0; border:0; background:linear-gradient(135deg,var(--hero-a),var(--hero-b)); color:var(--hero-fg); }
+    .app-header-inner { max-width:1280px; margin:0 auto; padding:22px 24px 8px; display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center; }
+    .brand { display:flex; gap:14px; align-items:center; } .brand-mark { width:46px; height:46px; border-radius:12px; display:grid; place-items:center; font-size:26px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); }
+    .brand h1 { margin:0; font-size:1.35rem; } .brand-sub { margin:0; font-size:.8rem; opacity:.85; }
+    .pills { display:flex; gap:8px; flex-wrap:wrap; } .app-header .pill { font-size:.72rem; padding:3px 11px; border-color:rgba(255,255,255,.35); background:rgba(255,255,255,.12); }
+    .header-right { margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap; } .run-time { font-size:.78rem; opacity:.9; }
+    .theme-select { background:rgba(255,255,255,.14); color:inherit; border:1px solid rgba(255,255,255,.35); border-radius:8px; padding:6px 10px; font-size:.8rem; } .theme-select option { color:#111; }
+    .tabs { max-width:1280px; margin:0 auto; padding:8px 24px 0; display:flex; gap:6px; overflow-x:auto; position:static; background:transparent; border:0; }
+    .tab { background:none; border:0; color:inherit; opacity:.85; padding:11px 16px; font-size:.9rem; font-weight:600; cursor:pointer; border-radius:10px 10px 0 0; white-space:nowrap; }
+    .tab:hover { opacity:1; background:rgba(255,255,255,.1); } .tab[aria-selected="true"] { background:var(--bg); color:var(--text); opacity:1; }
+    .count { font-size:.7rem; padding:1px 8px; border-radius:999px; background:rgba(120,130,160,.25); margin-left:4px; } .count-fail { background:var(--bad); color:#fff; }
+    .status-strip { height:5px; display:flex; } .status-strip i { display:block; height:100%; }
+    .page { max-width:1280px; margin:0 auto; padding:24px; } .page .tab-panel { margin:0; padding:0; background:transparent; border:0; }
+    .page-foot { text-align:center; color:var(--muted); font-size:.8rem; padding:26px 0 36px; }
+    .panel,.stat { background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:0 1px 2px rgba(15,27,61,.05); }
+    .panel { padding:18px 20px; margin-bottom:18px; } .panel h2,.panel h3,.panel h4 { margin-top:0; }
+    .stats { grid-template-columns:1.6fr repeat(4,1fr); gap:18px; margin-bottom:18px; }
+    .stat { padding:18px 20px; border-left:4px solid var(--muted); } .stat .label { font-size:.8rem; font-weight:600; color:var(--muted); } .stat .value { font-size:2.1rem; font-weight:800; line-height:1.1; margin:4px 0; }
+    .stat.good { border-left-color:var(--good); } .stat.warn { border-left-color:var(--warn); } .stat.bad { border-left-color:var(--bad); } .stat.hero { border-left:0; color:var(--hero-fg); background:linear-gradient(135deg,var(--hero-a),var(--hero-b)); }
+    .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; } .toolbar input { border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:8px; padding:8px 11px; }
+    tbody tr:hover { background:var(--card); }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    @media(max-width:1000px) { .stats { grid-template-columns:1fr 1fr; } }
+    @media(max-width:640px) { .stats,.grid { grid-template-columns:1fr; } .app-header-inner,.tabs,.page { padding-left:14px; padding-right:14px; } .header-right { margin-left:0; } }
+    @media print { .tabs,.theme-select { display:none; } .tab-panel[hidden] { display:block!important; } .app-header { color:var(--text); background:var(--panel); } }
   </style>
 </head>
 <body>
-  <header>
-    <div class="eyebrow">Deterministic quality intelligence</div>
-    <h1>${escapeHtml(title)}</h1>
-    <p class="subtitle">Code change, scenario coverage, selected tests, CI execution, and safety evidence in one standalone report.</p>
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">&#9671;</div>
+        <div><h1>${escapeHtml(title)}</h1><p class="brand-sub">Playwright CodeGraph Quality Report</p></div>
+      </div>
+      <div class="pills">
+        <span class="pill">Status <b>${escapeHtml(overallStatus)}</b></span>
+        <span class="pill">Mode <b>${escapeHtml(plan?.mode ?? 'N/A')}</b></span>
+        <span class="pill">Tests <b>${selectedTests}</b></span>
+        <span class="pill">Scenarios <b>${scenarioCount}</b></span>
+      </div>
+      <div class="header-right">
+        <span class="run-time">Deterministic impact and scenario intelligence</span>
+        <label class="sr-only" for="theme-select">Theme</label>
+        <select id="theme-select" class="theme-select" aria-label="Theme"><option value="default">Light</option><option value="aquatic">Aquatic</option><option value="forest">Forest</option><option value="sunset">Sunset</option><option value="midnight">Midnight</option><option value="corporate">Corporate</option><option value="hc-black">High contrast black</option><option value="hc-white">High contrast white</option></select>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Report sections">
+      ${navigationButton('overview', 'Overview', true)}
+      ${navigationButton('pr-impact', `Impact <span class="count">${plan?.changedFiles.length ?? 0}</span>`)}
+      ${navigationButton('code-graph', 'Code graph')}
+      ${navigationButton('scenarios', `Scenarios <span class="count">${scenarioCount}</span>`)}
+      ${navigationButton('execution', `Execution <span class="count">${execution?.commands.length ?? 0}</span>`)}
+      ${navigationButton('safety', `Safety <span class="count ${artifacts.shadow?.missedFailure ? 'count-fail' : ''}">${artifacts.replay?.missedFailures ?? 0}</span>`)}
+    </nav>
+    <div class="status-strip" aria-hidden="true"><i style="flex:${Math.max(selectedTests, 1)};background:var(--good)"></i><i style="flex:${Math.max(scenarioGaps, 1)};background:${scenarioGaps ? 'var(--bad)' : 'var(--muted)'}"></i></div>
   </header>
-  <nav aria-label="Report sections">
-    ${navigationButton('overview', 'Overview', true)}
-    ${navigationButton('pr-impact', 'PR impact')}
-    ${navigationButton('code-graph', 'Code graph')}
-    ${navigationButton('scenarios', 'Scenarios')}
-    ${navigationButton('execution', 'CI execution')}
-    ${navigationButton('safety', 'Shadow and replay')}
-    <div class="theme-control"><label for="theme-select">Theme</label><select id="theme-select" aria-label="Report theme"><option value="default">Light</option><option value="aquatic">Aquatic</option><option value="forest">Forest</option><option value="sunset">Sunset</option><option value="midnight">Midnight</option><option value="corporate">Corporate</option><option value="hc-black">High contrast black</option><option value="hc-white">High contrast white</option></select></div>
-  </nav>
-  <main>
-    <section id="overview" data-report-section>
-      <h2>Unified quality view</h2>
-      <div class="grid">
-        ${metricCard('Overall status', overallStatus, overallStatus === 'Ready' ? 'good' : overallStatus === 'Safe fallback' ? 'warn' : 'bad')}
+  <main class="page">
+    <section id="tab-overview" class="tab-panel" role="tabpanel" data-report-section>
+      <div class="grid stats">
+        ${metricCard('Overall status', overallStatus, `${overallStatus === 'Ready' ? 'good' : overallStatus === 'Safe fallback' ? 'warn' : 'bad'} hero`)}
         ${metricCard('Plan mode', plan?.mode ?? 'Not available', plan?.mode === 'full' ? 'warn' : 'good')}
         ${metricCard('Selected tests', String(selectedTests))}
         ${metricCard('Scenarios', String(scenarioCount))}
         ${metricCard('Scenario gaps', String(scenarioGaps), scenarioGaps ? 'bad' : 'good')}
-        ${metricCard('Execution', executionPassed === undefined ? 'Not available' : executionPassed ? 'Passed' : 'Failed', executionPassed === undefined ? '' : executionPassed ? 'good' : 'bad')}
       </div>
-      ${plan ? `<h3>Input fingerprint</h3><code>${escapeHtml(plan.inputFingerprint)}</code>` : emptyState('No plan artifact was provided.')}
-      ${plan?.fullRunReasons.length ? `<h3>Full-run safety reasons</h3><ul>${plan.fullRunReasons.map((reason) => `<li><strong>${escapeHtml(reason.code)}</strong>: ${escapeHtml(reason.detail)}</li>`).join('')}</ul>` : ''}
+      <div class="grid">
+        <div class="panel"><h3>Run intelligence</h3>${plan ? `<p><strong>Input fingerprint</strong></p><code>${escapeHtml(plan.inputFingerprint)}</code>` : emptyState('No plan artifact was provided.')}<p><strong>Execution</strong>: <span class="${executionPassed === undefined ? '' : executionPassed ? 'good' : 'bad'}">${executionPassed === undefined ? 'Not available' : executionPassed ? 'Passed' : 'Failed'}</span></p></div>
+        <div class="panel"><h3>Safety posture</h3>${plan?.fullRunReasons.length ? `<ul>${plan.fullRunReasons.map((reason) => `<li><strong>${escapeHtml(reason.code)}</strong>: ${escapeHtml(reason.detail)}</li>`).join('')}</ul>` : '<p class="good">No full-run fallback reason was recorded.</p>'}</div>
+      </div>
     </section>
-    <section id="pr-impact" data-report-section hidden>
-      <h2>Pull-request impact</h2>
-      ${renderImpact(plan)}
+    <section id="tab-pr-impact" class="tab-panel" role="tabpanel" data-report-section hidden>
+      <div class="panel"><h2>Pull-request impact</h2>${renderImpact(plan)}</div>
     </section>
-    <section id="code-graph" data-report-section hidden>
-      <h2>Code graph</h2>
-      ${renderCodeGraph(plan, scenarios)}
+    <section id="tab-code-graph" class="tab-panel" role="tabpanel" data-report-section hidden>
+      <div class="panel"><h2>Code graph</h2>${renderCodeGraph(plan, scenarios)}</div>
     </section>
-    <section id="scenarios" data-report-section hidden>
-      <h2>Scenario coverage</h2>
-      ${renderScenarios(scenarios)}
+    <section id="tab-scenarios" class="tab-panel" role="tabpanel" data-report-section hidden>
+      <div class="panel"><h2>Scenario coverage</h2>${renderScenarios(scenarios)}</div>
     </section>
-    <section id="execution" data-report-section hidden>
-      <h2>CI execution</h2>
-      ${renderExecution(execution)}
+    <section id="tab-execution" class="tab-panel" role="tabpanel" data-report-section hidden>
+      <div class="panel"><h2>CI execution</h2>${renderExecution(execution)}</div>
     </section>
-    <section id="safety" data-report-section hidden>
-      <h2>Shadow and replay safety</h2>
-      ${renderSafety(artifacts.shadow, artifacts.replay)}
+    <section id="tab-safety" class="tab-panel" role="tabpanel" data-report-section hidden>
+      <div class="panel"><h2>Shadow and replay safety</h2>${renderSafety(artifacts.shadow, artifacts.replay)}</div>
     </section>
   </main>
+  <footer class="page-foot">Generated by <strong>Playwright CodeGraph</strong> &middot; deterministic, fail-open test intelligence</footer>
   <script>
-    const buttons = [...document.querySelectorAll('nav button')];
+    const buttons = [...document.querySelectorAll('.tab')];
     const sections = [...document.querySelectorAll('[data-report-section]')];
-    for (const button of buttons) button.addEventListener('click', () => {
-      for (const candidate of buttons) candidate.setAttribute('aria-pressed', String(candidate === button));
-      for (const section of sections) section.hidden = section.id !== button.dataset.target;
-    });
+    const setTab = (name, updateHash = true) => {
+      if (!buttons.some((button) => button.dataset.tab === name)) name = 'overview';
+      for (const button of buttons) button.setAttribute('aria-selected', String(button.dataset.tab === name));
+      for (const section of sections) section.hidden = section.id !== 'tab-' + name;
+      if (updateHash && location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+    };
+    for (const button of buttons) button.addEventListener('click', () => setTab(button.dataset.tab));
     const filter = document.querySelector('#test-filter');
     if (filter) filter.addEventListener('input', () => {
       const query = filter.value.toLowerCase();
@@ -219,6 +256,8 @@ function renderReport(title: string, artifacts: ReportArtifacts): string {
       applyTheme(themeSelect.value);
       themeSelect.addEventListener('change', () => applyTheme(themeSelect.value));
     }
+    window.addEventListener('hashchange', () => setTab(location.hash.slice(1), false));
+    setTab(location.hash.slice(1), false);
   </script>
 </body>
 </html>
@@ -344,11 +383,11 @@ function renderSafety(shadow: ShadowArtifact | undefined, replay: ReplayArtifact
 }
 
 function navigationButton(target: string, label: string, selected = false): string {
-  return `<button type="button" data-target="${target}" aria-controls="${target}" aria-pressed="${String(selected)}">${label}</button>`;
+  return `<button class="tab" type="button" role="tab" data-tab="${target}" aria-controls="tab-${target}" aria-selected="${String(selected)}">${label}</button>`;
 }
 
 function metricCard(label: string, value: string, statusClass = ''): string {
-  return `<div class="card"><div class="muted">${escapeHtml(label)}</div><div class="metric ${statusClass}">${escapeHtml(value)}</div></div>`;
+  return `<div class="stat ${statusClass}"><div class="label">${escapeHtml(label)}</div><div class="value">${escapeHtml(value)}</div></div>`;
 }
 
 function emptyState(messageText: string): string {
