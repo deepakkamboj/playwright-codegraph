@@ -59,12 +59,16 @@ deterministic affected-test plan:
 npm run plan
 npm run explain:math
 npm run run:selected
+npm run report
 ```
 
 Because `@demo/store-app` depends on `@demo/math-core`, a math-core change
 selects the core unit test through codegraph and the store-app unit test through
 the Rush dependent-project safety policy. The checkout Playwright test is also
 linked through the journey/scenario model.
+
+Open `test-selection-out/codegraph-report.html` to inspect the unified PR
+impact, scenario coverage, execution, and safety dashboard.
 
 ## Using the published package
 

@@ -18,6 +18,7 @@
     "scenarios": "playwright-codegraph scenarios",
     "plan": "playwright-codegraph plan --base main",
     "run:selected": "playwright-codegraph run",
+    "report": "playwright-codegraph report --title \"Rush Example Quality Report\"",
     "explain:math": "playwright-codegraph explain packages/math-core/src/index.ts"
   },
   "devDependencies": {

@@ -21,6 +21,7 @@ export {
 export { CliCodegraphAdapter, CodegraphError } from './codegraph.js';
 export { DEFAULT_CONFIG, loadConfig, type CodegraphSelectionConfig } from './config.js';
 export { detectChanges, listRepositoryFiles, type GitChanges } from './git.js';
+export { generateHtmlReport, type HtmlReportOptions } from './html-report.js';
 export { createPlan, type PlanOptions } from './planner.js';
 export { executePlan, type ExecutionResult } from './executor.js';
 export { loadRushWorkspace, type RushWorkspace } from './rush.js';

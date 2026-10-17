@@ -27,6 +27,7 @@ export interface SelectionInput {
   readonly codegraphAffectedTests: readonly string[];
   readonly scenarios: ScenarioInventory;
   readonly scenarioCoverageGaps?: readonly string[];
+  readonly forceFull?: boolean;
 }
 
 export function selectTests(input: SelectionInput): SelectionPlan {
@@ -38,6 +39,9 @@ export function selectTests(input: SelectionInput): SelectionPlan {
   const allTests = new Set([...unitFiles, ...playwrightFiles]);
   const selected = new Map<string, { kind: TestKind; bucket: TestBucket; project?: string; reasons: SelectionReason[] }>();
   const fullRunReasons: FullRunReason[] = [];
+  if (input.forceFull) {
+    fullRunReasons.push({ code: 'manual-full-run', detail: 'full execution explicitly requested' });
+  }
   if ((input.scenarioCoverageGaps ?? []).length > 0) {
     fullRunReasons.push({
       code: 'unsafe-input',
