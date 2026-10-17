@@ -4,3 +4,6 @@ coverage/
 .codegraph/
 test-selection-out/
 *.tgz
+.env
+.env.*
+!.env.example

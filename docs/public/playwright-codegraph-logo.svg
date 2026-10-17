@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="430" viewBox="0 0 920 430" role="img" aria-labelledby="title description">
+  <title id="title">Playwright CodeGraph</title>
+  <desc id="description">Changed code flows through connected scenario nodes to verified unit and Playwright tests.</desc>
+  <defs>
+    <linearGradient id="graphGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="wordGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset=".52" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#0f9f6e"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity=".18"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <rect x="162" y="40" width="596" height="190" rx="42" fill="#fff" stroke="#dbe4f3" stroke-width="3"/>
+  </g>
+
+  <path d="M292 135H407" fill="none" stroke="#64748b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M513 135H628" fill="none" stroke="#64748b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g transform="translate(215 80)">
+    <rect width="94" height="110" rx="22" fill="#fff7ed" stroke="#f97316" stroke-width="7"/>
+    <path d="M24 37h46M24 57h28" stroke="#f97316" stroke-width="8" stroke-linecap="round"/>
+    <path d="M31 84h32M47 68v32" stroke="#ea580c" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="81" cy="15" r="11" fill="#f97316"/>
+  </g>
+
+  <g transform="translate(405 75)">
+    <path d="M55 0 110 55 55 110 0 55Z" fill="url(#graphGradient)"/>
+    <path d="M30 56 52 33M58 34l22 21M32 59l20 20M58 79l22-20" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="27" cy="57" r="9" fill="#fff"/>
+    <circle cx="55" cy="28" r="9" fill="#fff"/>
+    <circle cx="84" cy="57" r="9" fill="#fff"/>
+    <circle cx="55" cy="84" r="9" fill="#fff"/>
+  </g>
+
+  <g transform="translate(620 80)">
+    <circle cx="55" cy="55" r="55" fill="#ecfdf5" stroke="#10b981" stroke-width="7"/>
+    <path d="m26 57 19 19 39-43" fill="none" stroke="#059669" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 14h42" stroke="#34d399" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <text x="460" y="300" text-anchor="middle" fill="url(#wordGradient)" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="66" font-weight="800" letter-spacing="-2">
+    Playwright CodeGraph
+  </text>
+  <path d="M235 326h450" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="460" y="368" text-anchor="middle" fill="#334155" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="5">
+    CHANGE &#8594; SCENARIO &#8594; TEST
+  </text>
+  <text x="460" y="402" text-anchor="middle" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" letter-spacing="1.5">
+    DETERMINISTIC QUALITY INTELLIGENCE
+  </text>
+</svg>
