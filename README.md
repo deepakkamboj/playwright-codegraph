@@ -143,6 +143,22 @@ long-running:
 See [the GitHub example](./examples/github-actions-affected.yml) and
 [the Azure Pipelines example](./examples/azure-pipelines.yml).
 
+## Complete Rush example
+
+[`examples/rush-two-package`](./examples/rush-two-package) is an independently
+runnable repository with two Rush projects:
+
+```text
+@demo/store-app  --->  @demo/math-core
+```
+
+It includes package manifests, TypeScript builds, Vitest unit tests, a
+Playwright customer journey, an HTTP test server, Rush configuration, scenario
+traceability, codegraph configuration, and commands for graph build, planning,
+explanation, scenario validation, and selected execution. CI validates the
+example end to end by changing math-core and asserting that the deterministic
+plan selects exactly three tests across both projects.
+
 ## Current boundaries
 
 - Rush workspaces are the v1 workspace model.

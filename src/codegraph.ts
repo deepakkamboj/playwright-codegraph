@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 
 import type { CodegraphConfig } from './config.js';
@@ -15,10 +17,14 @@ export class CodegraphError extends Error {
 }
 
 export class CliCodegraphAdapter implements CodegraphAdapter {
+  private readonly command: { readonly executable: string; readonly argsPrefix: readonly string[] };
+
   public constructor(
     private readonly root: string,
     private readonly config: CodegraphConfig,
-  ) {}
+  ) {
+    this.command = resolveCodegraphCommand(root, config.executable);
+  }
 
   public async getVersion(): Promise<string> {
     const output = await this.invoke(['--version']);
@@ -74,8 +80,8 @@ export class CliCodegraphAdapter implements CodegraphAdapter {
   private async invoke(args: readonly string[], input?: string): Promise<string> {
     try {
       const result = await runProcess({
-        executable: this.config.executable,
-        args,
+        executable: this.command.executable,
+        args: [...this.command.argsPrefix, ...args],
         cwd: this.root,
         ...(input === undefined ? {} : { input }),
         timeoutMs: this.config.timeoutMs,
@@ -87,6 +93,7 @@ export class CliCodegraphAdapter implements CodegraphAdapter {
           'failed',
         );
       }
+
       return result.stdout;
     } catch (error) {
       if (error instanceof CodegraphError) throw error;
@@ -95,6 +102,35 @@ export class CliCodegraphAdapter implements CodegraphAdapter {
       }
       throw error;
     }
+  }
+}
+
+function resolveCodegraphCommand(
+  root: string,
+  configuredExecutable: string,
+): { readonly executable: string; readonly argsPrefix: readonly string[] } {
+  if (configuredExecutable !== 'codegraph') return { executable: configuredExecutable, argsPrefix: [] };
+  try {
+    const requireFromRepository = createRequire(path.join(root, 'package.json'));
+    const packageJsonPath = requireFromRepository.resolve('@colbymchenry/codegraph/package.json');
+    const packageJson: unknown = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    if (!packageJson || typeof packageJson !== 'object' || Array.isArray(packageJson)) {
+      throw new Error('codegraph package metadata is invalid');
+    }
+    const bin = (packageJson as Record<string, unknown>).bin;
+    const relativeBin =
+      typeof bin === 'string'
+        ? bin
+        : bin && typeof bin === 'object' && !Array.isArray(bin)
+          ? (bin as Record<string, unknown>).codegraph
+          : undefined;
+    if (typeof relativeBin !== 'string' || !relativeBin) throw new Error('codegraph package does not declare a bin');
+    return {
+      executable: process.execPath,
+      argsPrefix: [path.resolve(path.dirname(packageJsonPath), relativeBin)],
+    };
+  } catch {
+    return { executable: configuredExecutable, argsPrefix: [] };
   }
 }
 
