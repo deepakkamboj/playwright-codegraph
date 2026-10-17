@@ -1,0 +1,68 @@
+---
+title: Deployment
+---
+
+# Deployment
+
+The deterministic data plane always runs in the customer environment. Source
+analysis, graph construction, selection, and test execution do not move to a
+control plane.
+
+## Operating Models
+
+| Model | Execution and source | Control plane | Published data |
+| --- | --- | --- | --- |
+| Cloud | Customer workstation or CI runner | Vendor-managed SaaS | Redacted report or metadata, by policy |
+| Hybrid | Customer workstation or CI runner | Private endpoint or customer-managed gateway | Metadata only by default |
+| On-prem | Customer workstation or CI runner | None required | Local artifacts only |
+
+## Security Boundaries
+
+1. Repository source and authenticated browser state remain inside the customer
+   execution boundary.
+2. The deterministic selector makes every run or skip decision locally.
+3. Artifact publication is explicit: `local-only`, `metadata-only`, or
+   `full-report`.
+4. Hybrid connectivity uses private networking and workload identity or mutual
+   TLS.
+5. On-prem mode needs no network access.
+
+## Deployment Profile
+
+Profiles conform to `deployment-profile.schema.json`:
+
+```json
+{
+  "$schema": "../../deployment-profile.schema.json",
+  "schemaVersion": 1,
+  "mode": "hybrid",
+  "execution": {
+    "location": "customer-environment",
+    "networkAccess": "private-link"
+  },
+  "controlPlane": {
+    "endpoint": "https://codegraph.internal.example.com",
+    "authentication": "mutual-tls"
+  },
+  "artifacts": {
+    "publish": "metadata-only",
+    "redactPaths": true
+  }
+}
+```
+
+## Current Scope
+
+The package currently implements the local and CI deterministic data plane,
+portable artifacts, and standalone report. Deployment profiles define a stable
+contract for future control-plane integrations; the CLI does not upload data.
+
+The same commands run in all 3 models:
+
+```bash
+npx playwright-codegraph graph sync
+npx playwright-codegraph scenarios
+npx playwright-codegraph plan --base origin/main
+npx playwright-codegraph run
+npx playwright-codegraph report
+```

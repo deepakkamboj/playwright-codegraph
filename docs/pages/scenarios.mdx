@@ -1,0 +1,113 @@
+---
+title: Scenarios & Journeys
+---
+
+# Scenarios & Journeys
+
+Scenario coverage connects customer intent to code paths and executable tests.
+It supplements file reachability with a business-level model.
+
+## Traceability Model
+
+```text
+Customer journey
+  └─ User journey
+       └─ Scenario
+            ├─ dependsOn → Scenario
+            ├─ covers → Code path
+            └─ verifiedBy → Unit or Playwright test
+```
+
+## Scenario Classes
+
+Use tags to make coverage visible in the current schema:
+
+| Class | Question |
+| --- | --- |
+| `happy-path` | Can the customer complete the primary journey? |
+| `positive` | Do valid inputs and supported alternatives work? |
+| `negative` | Are invalid inputs rejected with the correct outcome? |
+| `edge` | Do boundary values, precision, and limits behave correctly? |
+| `corner` | Do unusual combinations and rare states remain safe? |
+
+You can add recovery, resilience, security, accessibility, or performance tags
+without changing the deterministic selection contract.
+
+## Dependencies and Workflow
+
+Add `dependsOn` when a scenario requires another state:
+
+```yaml
+- id: checkout.authorize-payment
+  title: Authorize a card payment
+  criticality: critical
+  requirementRefs: [REQ-PAY-1]
+  owners: [payments]
+  tags: [happy-path, positive]
+  codePaths: [packages/payments/src/**]
+
+- id: checkout.confirm-order
+  title: Confirm the completed order
+  dependsOn: [checkout.authorize-payment]
+  criticality: critical
+  requirementRefs: [REQ-ORDER-1]
+  owners: [orders]
+  tags: [happy-path]
+  codePaths: [apps/store/src/order/**]
+```
+
+When `dependsOn` is omitted, YAML order defines the default workflow inside the
+user journey. Validation rejects unknown dependencies, self-dependencies, and
+cycles.
+
+## Test Links
+
+Place annotations in unit or Playwright test files:
+
+```ts
+// @scenario checkout.authorize-payment
+it("authorizes a valid card", () => {
+  // Assert authorization behavior.
+});
+```
+
+```ts
+test("customer confirms an order @scenario:checkout.confirm-order", async ({ page }) => {
+  // Assert the completed journey.
+});
+```
+
+Specs can use Page Objects and helpers normally. CodeGraph only reads the
+stable annotation.
+
+## Validate Static Coverage
+
+```bash
+npx playwright-codegraph graph sync
+npx playwright-codegraph scenarios
+```
+
+The command reports:
+
+- Scenarios with no linked test
+- Code patterns that resolve no files
+- Code files with no static path to a scenario test
+- Unknown annotations
+- Scenario dependency errors
+
+## Add Runtime Evidence
+
+Static reachability and runtime observations remain separate:
+
+```bash
+npx playwright-codegraph scenarios --lcov coverage/lcov.info
+```
+
+Or:
+
+```bash
+npx playwright-codegraph scenarios --v8 coverage/coverage-final.json
+```
+
+Set `scenarios.requireRuntimeEvidence` to `true` only when your CI consistently
+produces compatible coverage.
