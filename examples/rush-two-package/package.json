@@ -1,0 +1,31 @@
+{
+  "name": "playwright-codegraph-rush-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "graph:build": "playwright-codegraph graph build",
+    "graph:sync": "playwright-codegraph graph sync",
+    "doctor": "playwright-codegraph doctor",
+    "scenarios": "playwright-codegraph scenarios",
+    "plan": "playwright-codegraph plan --base main",
+    "run:selected": "playwright-codegraph run",
+    "explain:math": "playwright-codegraph explain packages/math-core/src/index.ts"
+  },
+  "devDependencies": {
+    "@colbymchenry/codegraph": "1.6.2",
+    "@playwright/test": "^1.56.1",
+    "playwright-codegraph": "file:../..",
+    "tsx": "^4.20.6",
+    "typescript": "^5.8.3",
+    "vitest": "^5.0.3"
+  }
+}

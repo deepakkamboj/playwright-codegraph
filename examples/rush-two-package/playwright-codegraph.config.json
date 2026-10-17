@@ -1,0 +1,50 @@
+{
+  "baseRef": "main",
+  "includeUntracked": true,
+  "sourceExtensions": [".ts"],
+  "ignoredChanges": ["**/*.md", "**/*.png", "package-lock.json"],
+  "globalTriggers": [
+    "rush.json",
+    "common/config/**",
+    "tsconfig.json",
+    "playwright.config.ts",
+    "playwright-codegraph.config.json",
+    "test-scenarios.yml"
+  ],
+  "projectWideTriggers": ["**/package.json", "**/tsconfig.json"],
+  "unitTestGlobs": ["**/src/**/*.test.ts"],
+  "playwrightTestGlobs": ["apps/store-app/tests/**/*.spec.ts"],
+  "coreTestGlobs": ["apps/store-app/tests/checkout.spec.ts"],
+  "smokeTestGlobs": ["apps/store-app/tests/**/*.spec.ts"],
+  "mappings": [
+    {
+      "when": ["packages/math-core/src/**"],
+      "tests": ["apps/store-app/tests/checkout.spec.ts"]
+    }
+  ],
+  "maxSelectedUnitFiles": 100,
+  "maxSelectedPlaywrightFiles": 20,
+  "projectDependentDepth": 1,
+  "codegraph": {
+    "executable": "codegraph",
+    "minimumVersion": "1.6.2",
+    "depth": 12,
+    "timeoutMs": 1200000
+  },
+  "scenarios": {
+    "registry": "test-scenarios.yml",
+    "requireRuntimeEvidence": false
+  },
+  "unit": {
+    "executable": "npx",
+    "args": ["vitest", "run", "{files}"],
+    "fullArgs": ["vitest", "run"],
+    "maxArgumentCharacters": 20000
+  },
+  "playwright": {
+    "executable": "npx",
+    "args": ["playwright", "test", "{files}"],
+    "fullArgs": ["playwright", "test"],
+    "maxArgumentCharacters": 20000
+  }
+}

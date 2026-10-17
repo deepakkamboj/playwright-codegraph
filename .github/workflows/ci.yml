@@ -23,3 +23,39 @@ jobs:
       - run: npm run check
       - if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         run: npm audit --omit=dev
+
+  rush-example:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/rush-two-package
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/rush-two-package/package-lock.json
+      - name: Build local playwright-codegraph package
+        working-directory: .
+        run: npm ci && npm run build
+      - run: npm ci
+      - run: npm audit
+      - run: npm run build
+      - run: npm run test:all
+      - name: Create standalone Git baseline
+        run: |
+          git init -b example-main
+          git config user.email "ci@example.com"
+          git config user.name "CI"
+          git add .
+          git commit -m "example baseline"
+      - run: npm run graph:build
+      - run: npm run doctor
+      - run: npm run scenarios
+      - name: Create an affected math-core change
+        run: echo "// CI affected change" >> packages/math-core/src/index.ts
+      - run: npm run plan -- --base example-main
+      - name: Assert selective cross-project plan
+        run: node -e "const p=require('./test-selection-out/plan.json'); if(p.mode!=='selective'||p.tests.length!==3) throw new Error(JSON.stringify(p))"
+      - run: npm run run:selected
