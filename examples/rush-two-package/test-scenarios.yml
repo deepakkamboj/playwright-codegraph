@@ -34,7 +34,6 @@ customerJourneys:
               - e2e
             codePaths:
               - apps/store-app/src/pricing.ts
-              - apps/store-app/src/server.ts
           - id: checkout.reject-invalid-quantity
             title: Reject an invalid cart quantity
             dependsOn:
@@ -49,7 +48,6 @@ customerJourneys:
               - validation
             codePaths:
               - packages/math-core/src/index.ts
-              - apps/store-app/src/server.ts
           - id: checkout.round-fractional-total
             title: Round fractional currency to cents
             dependsOn:
