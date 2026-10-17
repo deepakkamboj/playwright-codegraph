@@ -8,35 +8,11 @@ interface FeatureProps {
 
 export function Feature({ icon, title, children }: FeatureProps) {
   return (
-    <div
-      aria-hidden="true"
-      style={{
-        display: "flex",
-        alignItems: "flex-start",
-        gap: "0.75rem",
-        marginBottom: "0.75rem",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "1.5rem",
-          height: "1.5rem",
-          color: "#3b82f6",
-          flexShrink: 0,
-          marginTop: "0.125rem",
-        }}
-      >
+    <div className="feature-item">
+      <div className="feature-icon">
         {icon}
       </div>
-      <div
-        style={{
-          flex: 1,
-          lineHeight: 1.6,
-        }}
-      >
+      <div className="feature-copy">
         <strong style={{ fontWeight: 600 }}>{title}</strong>
         <span>: {children}</span>
       </div>
@@ -49,14 +25,5 @@ interface FeaturesProps {
 }
 
 export function Features({ children }: FeaturesProps) {
-  return (
-    <div
-      style={{
-        marginTop: "1rem",
-        marginBottom: "1.5rem",
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div className="feature-list">{children}</div>;
 }

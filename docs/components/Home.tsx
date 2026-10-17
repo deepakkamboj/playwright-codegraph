@@ -61,35 +61,37 @@ export default function Home() {
   return (
     <div className="das-home">
       <section className="das-hero">
-        <img
-          className="das-product-logo"
-          src={asset("/playwright-codegraph-logo.svg")}
-          alt="Playwright CodeGraph: Change to Scenario to Test"
-          width={920}
-          height={430}
-        />
-        <h1>Run the smallest test set you can prove is safe</h1>
-        <p className="das-tagline">
-          Map every code change to customer journeys, user scenarios, and the unit or Playwright
-          tests that prove them. When evidence is incomplete, CodeGraph fails open to the full
-          suite.
-        </p>
-        <div className="das-badges" aria-label="Project status">
-          {badges.map(([alt, src, href, width]) => (
-            <a key={alt} href={href} target="_blank" rel="noreferrer">
-              <img alt={alt} src={src} width={width} height={22} />
+        <div className="das-section-shell">
+          <img
+            className="das-product-logo"
+            src={asset("/playwright-codegraph-logo.svg")}
+            alt="Playwright CodeGraph: Change to Scenario to Test"
+            width={920}
+            height={360}
+          />
+          <h1>Run the smallest test set you can prove is safe</h1>
+          <p className="das-tagline">
+            Map every code change to customer journeys, user scenarios, and the unit or Playwright
+            tests that prove them. When evidence is incomplete, CodeGraph fails open to the full
+            suite.
+          </p>
+          <div className="das-badges" aria-label="Project status">
+            {badges.map(([alt, src, href, width]) => (
+              <a key={alt} href={href} target="_blank" rel="noreferrer">
+                <img alt={alt} src={src} width={width} height={22} />
+              </a>
+            ))}
+          </div>
+          <div className="das-cta">
+            <Link className="das-btn primary" href="/getting-started">
+              Install CodeGraph
+            </Link>
+            <a className="das-btn ghost" href={asset("/codegraph-quality-report-sample.html")}>
+              Open Sample Report
             </a>
-          ))}
+          </div>
+          <HeroGraph />
         </div>
-        <div className="das-cta">
-          <Link className="das-btn primary" href="/getting-started">
-            Install CodeGraph
-          </Link>
-          <a className="das-btn ghost" href={asset("/codegraph-quality-report-sample.html")}>
-            Open Sample Report
-          </a>
-        </div>
-        <HeroGraph />
       </section>
 
       <PackageInstall packages={["playwright-codegraph"]} dev />
@@ -237,12 +239,14 @@ export default function Home() {
       </section>
 
       <section className="closing-cta">
-        <p className="section-kicker">Start With Your Existing Tests</p>
-        <h2>Make Every Pull Request Faster and Easier to Trust</h2>
-        <p>No replacement runner. No AI-only skipping. No unexplained empty plans.</p>
-        <div className="das-cta">
-          <Link className="das-btn primary" href="/getting-started">Install CodeGraph</Link>
-          <Link className="das-btn ghost" href="/architecture">Review the Architecture</Link>
+        <div className="das-section-shell">
+          <p className="section-kicker">Start With Your Existing Tests</p>
+          <h2>Make Every Pull Request Faster and Easier to Trust</h2>
+          <p>No replacement runner. No AI-only skipping. No unexplained empty plans.</p>
+          <div className="das-cta">
+            <Link className="das-btn primary" href="/getting-started">Install CodeGraph</Link>
+            <Link className="das-btn ghost" href="/architecture">Review the Architecture</Link>
+          </div>
         </div>
       </section>
     </div>
