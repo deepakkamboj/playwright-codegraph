@@ -140,7 +140,7 @@ long-running:
 3. Generate and publish the plan and scenario matrix.
 4. Execute the plan. Any unsafe planner input produces a full-run plan.
 
-See [the GitHub example](./.github/workflows/affected.yml) and
+See [the GitHub example](./examples/github-actions-affected.yml) and
 [the Azure Pipelines example](./examples/azure-pipelines.yml).
 
 ## Current boundaries
