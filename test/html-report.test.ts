@@ -105,6 +105,17 @@ test('generates a standalone escaped quality dashboard from all artifact types',
   assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
   assert.doesNotMatch(html, /<link[^>]+stylesheet/i);
   assert.doesNotMatch(html, /<script[^>]+src=/i);
+  assert.match(html, /class="app-header"/);
+  assert.match(html, /class="app-header-inner"/);
+  assert.match(html, /class="brand-mark"/);
+  assert.match(html, /class="pills"/);
+  assert.match(html, /class="tabs" role="tablist"/);
+  assert.match(html, /class="status-strip"/);
+  assert.match(html, /class="grid stats"/);
+  assert.match(html, /class="tab-panel" role="tabpanel"/);
+  assert.match(html, /class="page-foot"/);
+  assert.match(html, /history\.replaceState/);
+  assert.match(html, /window\.addEventListener\('hashchange'/);
 });
 
 test('rejects an empty artifact directory', () => {
