@@ -232,9 +232,9 @@ export default function Home() {
           tests, execution results, and safety history.
         </p>
       <Diagram
-        src="/codegraph-quality-report.png"
-        alt="Playwright CodeGraph report showing report navigation, quality metrics, changed-code impact, scenario workflow coverage, and execution evidence."
-        caption="One standalone report for pull-request impact, scenario coverage, selected tests, CI execution, and safety evidence."
+        src="/codegraph-quality-report-overview.png"
+        alt="Playwright CodeGraph run brief showing scenario readiness, evidence tiles, selection flow, and replay safety charts."
+        caption="The run brief combines readiness, impact metrics, selection flow, and replay safety in one evidence-first workspace."
       />
       </section>
 

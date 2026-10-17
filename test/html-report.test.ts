@@ -65,6 +65,12 @@ test('generates a standalone escaped quality dashboard from all artifact types',
     JSON.stringify({
       inputFingerprint: 'sha256:test',
       mode: 'selective',
+      environment: {
+        runner: 'CI',
+        platform: 'linux 6.8',
+        architecture: 'x64',
+        nodeVersion: 'v22.15.0',
+      },
       commands: [{ kind: 'unit', executable: 'node', args: ['vitest'], exitCode: 0 }],
       exitCode: 0,
     }),
@@ -101,19 +107,45 @@ test('generates a standalone escaped quality dashboard from all artifact types',
     assert.match(html, new RegExp(`data-theme="${theme}"|value="${theme}"`));
   }
   assert.match(html, /Shadow and replay safety/);
+  assert.match(html, /Test execution environment/);
+  assert.match(html, /linux 6\.8/);
   assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;\.ts/);
   assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
   assert.doesNotMatch(html, /<link[^>]+stylesheet/i);
   assert.doesNotMatch(html, /<script[^>]+src=/i);
-  assert.match(html, /class="app-header"/);
-  assert.match(html, /class="app-header-inner"/);
+  assert.match(html, /--bg:#fffaf5/);
+  assert.match(html, /class="skip-link"/);
+  assert.match(html, /class="report-navigation"/);
+  assert.match(html, /class="workspace-tools"/);
+  assert.match(html, /id="copy-run-brief"/);
+  assert.match(html, /class="run-header"/);
   assert.match(html, /class="brand-mark"/);
-  assert.match(html, /class="pills"/);
   assert.match(html, /class="tabs" role="tablist"/);
-  assert.match(html, /class="status-strip"/);
-  assert.match(html, /class="grid stats"/);
-  assert.match(html, /class="tab-panel" role="tabpanel"/);
+  assert.match(html, /class="nav-icon"/);
+  assert.match(html, /class="run-brief"/);
+  assert.match(html, /class="brief-measure"/);
+  assert.match(html, /class="readiness-ring"/);
+  assert.match(html, /class="outcome-tiles"/);
+  assert.match(html, /class="outcome-tile/);
+  assert.match(html, /class="chart-grid"/);
+  assert.match(html, /Selection flow/);
+  assert.match(html, /Replay safety/);
+  assert.match(html, /id="impact-changed-gradient"/);
+  assert.match(html, /id="impact-scenario-gradient"/);
+  assert.match(html, /id="impact-test-gradient"/);
+  assert.match(html, /class="section-heading"/);
+  assert.match(html, /data-tab="settings"/);
+  assert.match(html, /id="settings-theme-select"/);
+  assert.match(html, /id="print-report"/);
+  assert.match(html, /id="reset-theme"/);
+  assert.match(html, /class="outcome-tiles outcome-tiles-auto"/);
+  assert.doesNotMatch(html, /class="status-strip"/);
+  assert.match(html, /data-open-tab="pr-impact"/);
+  assert.match(html, /class="tab-panel" role="tabpanel" aria-labelledby=/);
   assert.match(html, /class="page-foot"/);
+  assert.match(html, /Change &rarr; Scenario &rarr; Test/);
+  assert.match(html, />Light coffee</);
+  assert.match(html, /event\.key === 'ArrowRight'/);
   assert.match(html, /history\.replaceState/);
   assert.match(html, /window\.addEventListener\('hashchange'/);
 });

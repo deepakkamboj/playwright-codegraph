@@ -18,22 +18,24 @@ npx playwright-codegraph report \
 
 ## Report Structure
 
-The interface follows the Playwright AI Reporter application structure:
+The interface uses a compact evidence workspace:
 
-- Branded header with run pills
-- Counted tabs and status strip
-- Hero quality metrics
-- Responsive panel hierarchy
+- Branded header with icon-led, counted tabs
+- Editorial run brief with a scenario-readiness chart
+- Reusable evidence tiles and responsive chart grids
+- Theme-aware impact and journey graph gradients
 - URL-addressable tab state
 - 8 persisted themes, including 2 high-contrast themes
+- Settings for appearance, printing, and theme reset
 - Print mode that includes every section
 
 ## Report Sections
 
 ### Overview
 
-Shows plan mode, selected-test count, scenario count, coverage gaps, execution
-status, fingerprint, and fallback posture.
+Shows plan mode, selected-test count, scenario readiness, coverage gaps,
+selection flow, replay safety, execution status, fingerprint, and fallback
+posture.
 
 ### Pull Request Impact
 
@@ -53,14 +55,31 @@ criticality, declared code paths, static links, runtime observations, and gaps.
 
 ### Execution and Safety
 
-Shows runner commands, exit codes, shadow comparisons, replay history,
-fallback frequency, and missed failures.
+Shows runner commands, exit codes, test execution environment, shadow
+comparisons, replay history, fallback frequency, and missed failures.
 
 <Diagram
-  src="/codegraph-quality-report.png"
-  alt="Standalone CodeGraph quality report with overview metrics, code-impact graph, scenario workflow, selected tests, and safety evidence."
-  caption="The report is self-contained, responsive, keyboard accessible, printable, and safe to publish as a CI artifact."
+  src="/codegraph-quality-report-overview.png"
+  alt="Standalone CodeGraph run brief with scenario readiness, evidence tiles, selection flow, and replay safety charts."
+  caption="Run brief: readiness, impact metrics, selection flow, and replay safety."
 />
+
+<Diagram
+  src="/codegraph-quality-report-graph.png"
+  alt="CodeGraph impact view with gradient nodes connecting changed files to scenarios and selected tests."
+  caption="Code graph: theme-aware gradient nodes make change-to-scenario-to-test traceability easy to scan."
+/>
+
+<Diagram
+  src="/codegraph-quality-report-execution.png"
+  alt="CodeGraph execution view showing outcome tiles, GitHub Actions environment details, and executed commands."
+  caption="Execution: selection mode, command results, and the exact runner environment captured with the artifact."
+/>
+
+The report is self-contained, responsive, keyboard accessible, printable, and
+safe to publish as a CI artifact. Open the
+[interactive sample](/codegraph-quality-report-sample.html) or download the
+[standalone HTML template](https://github.com/deepakkamboj/playwright-codegraph/blob/main/assets/codegraph-quality-report-sample.html).
 
 ## Standalone Security
 

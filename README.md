@@ -77,14 +77,34 @@ tests, scenario coverage, CI execution, shadow safety, and replay history.
 
 ## Unified HTML quality report
 
-[![CodeGraph unified quality report](./docs/codegraph-quality-report.png)](./docs/codegraph-quality-report-sample.html)
+[![CodeGraph run brief with readiness and safety charts](./assets/codegraph-quality-report-overview.png)](./docs/codegraph-quality-report-sample.html)
 
 The standalone dashboard combines scenario coverage, pull-request impact,
 selected unit and Playwright tests, full CI execution, shadow validation, and
 historical replay evidence. It also renders changed-code impact graphs and
-scenario dependency workflows using inline, accessible SVG. Eight built-in
-themes include two high-contrast options. Click the image to open the
-interactive sample.
+scenario dependency workflows using inline, accessible SVG gradients. The run
+brief adds scenario readiness, evidence tiles, selection flow, and replay
+safety charts. Eight built-in themes include two high-contrast options.
+
+<table>
+  <tr>
+    <td width="50%">
+      <a href="./docs/codegraph-quality-report-sample.html#code-graph">
+        <img src="./assets/codegraph-quality-report-graph.png" alt="CodeGraph impact graph connecting changed files, scenarios, and selected tests">
+      </a>
+      <br><strong>Change → Scenario → Test traceability</strong>
+    </td>
+    <td width="50%">
+      <a href="./docs/codegraph-quality-report-sample.html#execution">
+        <img src="./assets/codegraph-quality-report-execution.png" alt="CodeGraph execution report with outcome tiles, environment details, and commands">
+      </a>
+      <br><strong>Execution evidence and runner environment</strong>
+    </td>
+  </tr>
+</table>
+
+Open the [interactive report](./docs/codegraph-quality-report-sample.html) or
+download the [standalone HTML template](./assets/codegraph-quality-report-sample.html).
 
 ## Cloud, hybrid, and on-prem
 

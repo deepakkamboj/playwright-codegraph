@@ -164,6 +164,12 @@ write('scenario-coverage.json', {
 write('execution.json', {
   inputFingerprint: 'sha256:7ac99f5c3cf8c573b5ad99139e257867d9367b75fe60a5c468d550871f54f93a',
   mode: 'selective',
+  environment: {
+    runner: 'GitHub Actions',
+    platform: 'linux 6.8',
+    architecture: 'x64',
+    nodeVersion: 'v22.15.0',
+  },
   commands: [
     { kind: 'unit', executable: 'node', args: ['vitest.mjs', 'run', '4 selected files'], exitCode: 0 },
     { kind: 'playwright', executable: 'node', args: ['playwright', 'test', '2 selected files'], exitCode: 0 },
@@ -186,11 +192,17 @@ write('replay.json', {
   fallbackRuns: 9,
 });
 
-const outputFile = path.resolve('docs/codegraph-quality-report-sample.html');
-generateHtmlReport({
-  artifactDirectory: temporaryDirectory,
-  outputFile,
-  title: 'Checkout PR #184 Quality Report',
-});
+const outputFiles = [
+  path.resolve('assets/codegraph-quality-report-sample.html'),
+  path.resolve('docs/codegraph-quality-report-sample.html'),
+  path.resolve('docs/public/codegraph-quality-report-sample.html'),
+];
+for (const outputFile of outputFiles) {
+  generateHtmlReport({
+    artifactDirectory: temporaryDirectory,
+    outputFile,
+    title: 'Checkout PR #184 Quality Report',
+  });
+}
 fs.rmSync(temporaryDirectory, { recursive: true, force: true });
-console.log(outputFile);
+console.log(outputFiles.join('\n'));

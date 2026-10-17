@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 import type { CodegraphSelectionConfig, CommandConfig } from './config.js';
@@ -8,6 +9,12 @@ import type { SelectionPlan, TestKind } from './types.js';
 export interface ExecutionResult {
   readonly inputFingerprint: string;
   readonly mode: SelectionPlan['mode'];
+  readonly environment: {
+    readonly runner: 'CI' | 'Local';
+    readonly platform: string;
+    readonly architecture: string;
+    readonly nodeVersion: string;
+  };
   readonly commands: readonly {
     readonly kind: TestKind;
     readonly executable: string;
@@ -22,13 +29,21 @@ export async function executePlan(
   config: CodegraphSelectionConfig,
   timeoutMs = 0,
 ): Promise<ExecutionResult> {
+  const environment = {
+    runner: process.env.CI ? ('CI' as const) : ('Local' as const),
+    platform: `${os.platform()} ${os.release()}`,
+    architecture: os.arch(),
+    nodeVersion: process.version,
+  };
   const commands: {
     kind: TestKind;
     executable: string;
     args: readonly string[];
     exitCode: number;
   }[] = [];
-  if (plan.mode === 'empty') return { inputFingerprint: plan.inputFingerprint, mode: plan.mode, commands, exitCode: 0 };
+  if (plan.mode === 'empty') {
+    return { inputFingerprint: plan.inputFingerprint, mode: plan.mode, environment, commands, exitCode: 0 };
+  }
   for (const [kind, command] of [
     ['unit', config.unit],
     ['playwright', config.playwright],
@@ -48,10 +63,10 @@ export async function executePlan(
     if (result.stderr) process.stderr.write(result.stderr);
     commands.push({ kind, executable: invocation.executable, args: invocation.args, exitCode: result.exitCode });
     if (result.exitCode !== 0) {
-      return { inputFingerprint: plan.inputFingerprint, mode: plan.mode, commands, exitCode: result.exitCode };
+      return { inputFingerprint: plan.inputFingerprint, mode: plan.mode, environment, commands, exitCode: result.exitCode };
     }
   }
-  return { inputFingerprint: plan.inputFingerprint, mode: plan.mode, commands, exitCode: 0 };
+  return { inputFingerprint: plan.inputFingerprint, mode: plan.mode, environment, commands, exitCode: 0 };
 }
 
 function resolveInvocation(
