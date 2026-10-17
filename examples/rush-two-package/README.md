@@ -12,6 +12,8 @@ complete `playwright-codegraph` workflow with two Rush projects:
   unit tests, and a Playwright customer-journey test.
 - `test-scenarios.yml` maps customer and user journeys to both code paths and
   `@scenario` test annotations.
+- The demo covers happy-path, positive, negative, edge, and corner scenarios,
+  including explicit dependency arrows in the journey workflow.
 
 The root uses npm workspaces for a one-command demo installation. `rush.json`
 remains the authoritative project graph consumed by `playwright-codegraph`.
@@ -68,7 +70,8 @@ the Rush dependent-project safety policy. The checkout Playwright test is also
 linked through the journey/scenario model.
 
 Open `test-selection-out/codegraph-report.html` to inspect the unified PR
-impact, scenario coverage, execution, and safety dashboard.
+impact, changed-code graph, scenario dependency workflow, taxonomy coverage,
+execution, and safety dashboard.
 
 ## Using the published package
 

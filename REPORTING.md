@@ -11,6 +11,9 @@ The report is self-contained:
 - Content Security Policy restricting external resources.
 - Escaped repository paths, titles, reasons, and command arguments.
 - Printable sections and keyboard-accessible navigation.
+- Eight persisted themes: Light, Aquatic, Forest, Sunset, Midnight, Corporate,
+  High Contrast Black, and High Contrast White.
+- Inline accessible SVG graphs with no external visualization dependency.
 
 ## Generate a report
 
@@ -73,8 +76,24 @@ Reads `scenario-coverage.json` and shows:
 - Static codegraph links.
 - Observed runtime files.
 - Coverage gaps.
+- Happy-path, positive, negative, edge, and corner classification counts.
+- Scenario titles, criticality, and type tags.
+- Ordered user-journey workflows with explicit dependency arrows.
 
 Static reachability and runtime evidence remain separate.
+
+### Code graph
+
+Combines `plan.json` and `scenario-coverage.json` to show:
+
+- Changed file nodes.
+- Scenario nodes linked through declared and statically verified code paths.
+- Unit and Playwright test nodes linked to each scenario.
+- User journeys as workflow graphs, with each scenario represented as a node
+  and `dependsOn` relationships represented as directional arrows.
+
+The visual graph is bounded to 12 nodes per impact lane for readability. The
+tables retain the complete artifact data.
 
 ### CI execution
 

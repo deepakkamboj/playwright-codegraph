@@ -25,11 +25,13 @@
   "files": [
     "dist",
     "examples",
+    "deployment-profile.schema.json",
     "playwright-codegraph.config.example.json",
     "test-scenarios.example.yml",
     "LICENSE",
     "README.md",
     "REPORTING.md",
+    "DEPLOYMENT.md",
     "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {

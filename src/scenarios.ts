@@ -19,6 +19,7 @@ import { fingerprint, sortedUnique, toPosix } from './utils.js';
 export interface ScenarioInventory {
   readonly registry: ScenarioRegistry;
   readonly scenarios: ReadonlyMap<string, ScenarioDefinition>;
+  readonly contexts: ReadonlyMap<string, { readonly journeyId: string; readonly journeyTitle: string; readonly dependsOn: readonly string[] }>;
   readonly testsByScenario: ReadonlyMap<string, readonly string[]>;
 }
 
@@ -31,6 +32,7 @@ export function loadScenarioInventory(
   if (!fs.existsSync(absolute)) throw new Error(`Scenario registry not found: ${registryPath}`);
   const registry = parseRegistry(parse(fs.readFileSync(absolute, 'utf8')) as unknown);
   const scenarios = new Map<string, ScenarioDefinition>();
+  const contexts = new Map<string, { journeyId: string; journeyTitle: string; dependsOn: readonly string[] }>();
   const customerIds = new Set<string>();
   const userJourneyIds = new Set<string>();
   for (const customer of registry.customerJourneys) {
@@ -39,12 +41,18 @@ export function loadScenarioInventory(
     for (const journey of customer.userJourneys) {
       if (userJourneyIds.has(journey.id)) throw new Error(`Duplicate user journey id: ${journey.id}`);
       userJourneyIds.add(journey.id);
-      for (const scenario of journey.scenarios) {
+      for (const [index, scenario] of journey.scenarios.entries()) {
         if (scenarios.has(scenario.id)) throw new Error(`Duplicate scenario id: ${scenario.id}`);
         scenarios.set(scenario.id, scenario);
+        contexts.set(scenario.id, {
+          journeyId: journey.id,
+          journeyTitle: journey.title,
+          dependsOn: scenario.dependsOn ?? (index > 0 ? [journey.scenarios[index - 1]!.id] : []),
+        });
       }
     }
   }
+  validateScenarioDependencies(scenarios, contexts);
   const mutable = new Map<string, Set<string>>();
   for (const testFile of testFiles) {
     const source = fs.readFileSync(path.join(root, testFile), 'utf8');
@@ -58,6 +66,7 @@ export function loadScenarioInventory(
   return {
     registry,
     scenarios,
+    contexts,
     testsByScenario: new Map([...mutable].map(([id, files]) => [id, sortedUnique(files)])),
   };
 }
@@ -72,6 +81,7 @@ export async function buildScenarioCoverage(
   const entries: ScenarioCoverageEntry[] = [];
   const globalGaps: string[] = [];
   for (const scenario of [...inventory.scenarios.values()].sort((left, right) => left.id.localeCompare(right.id))) {
+    const context = inventory.contexts.get(scenario.id);
     const testFiles = inventory.testsByScenario.get(scenario.id) ?? [];
     const resolvedCodePaths = new Set<string>();
     const staticallyLinked = new Set<string>();
@@ -93,6 +103,12 @@ export async function buildScenarioCoverage(
     const observedRuntimeFiles = [...resolvedCodePaths].filter((file) => runtimeFiles.has(file)).sort();
     const entry = {
       scenarioId: scenario.id,
+      title: scenario.title,
+      ...(context
+        ? { journeyId: context.journeyId, journeyTitle: context.journeyTitle, dependsOn: context.dependsOn }
+        : {}),
+      criticality: scenario.criticality,
+      tags: sortedUnique(scenario.tags),
       testFiles,
       resolvedCodePaths: sortedUnique(resolvedCodePaths),
       staticallyLinkedCodePaths: sortedUnique(staticallyLinked),
@@ -219,12 +235,36 @@ function parseScenario(value: unknown): ScenarioDefinition {
     id: text(object.id, 'scenario id'),
     title: text(object.title, 'scenario title'),
     ...(actor ? { actor } : {}),
+    ...(object.dependsOn === undefined ? {} : { dependsOn: stringArray(object.dependsOn, 'dependsOn') }),
     criticality: criticality as ScenarioDefinition['criticality'],
     requirementRefs: stringArray(object.requirementRefs, 'requirementRefs'),
     owners: stringArray(object.owners, 'owners'),
     tags: stringArray(object.tags, 'tags'),
     codePaths: stringArray(object.codePaths, 'codePaths'),
   };
+}
+
+function validateScenarioDependencies(
+  scenarios: ReadonlyMap<string, ScenarioDefinition>,
+  contexts: ReadonlyMap<string, { readonly dependsOn: readonly string[] }>,
+): void {
+  for (const [scenarioId, context] of contexts) {
+    for (const dependency of context.dependsOn) {
+      if (dependency === scenarioId) throw new Error(`Scenario ${scenarioId} cannot depend on itself`);
+      if (!scenarios.has(dependency)) throw new Error(`Scenario ${scenarioId} depends on unknown scenario ${dependency}`);
+    }
+  }
+  const visiting = new Set<string>();
+  const visited = new Set<string>();
+  const visit = (scenarioId: string): void => {
+    if (visiting.has(scenarioId)) throw new Error(`Scenario dependency cycle detected at ${scenarioId}`);
+    if (visited.has(scenarioId)) return;
+    visiting.add(scenarioId);
+    for (const dependency of contexts.get(scenarioId)?.dependsOn ?? []) visit(dependency);
+    visiting.delete(scenarioId);
+    visited.add(scenarioId);
+  };
+  for (const scenarioId of scenarios.keys()) visit(scenarioId);
 }
 
 function record(value: unknown, label: string): Record<string, unknown> {
