@@ -1,0 +1,32 @@
+schemaVersion: 1
+customerJourneys:
+  - id: commerce
+    title: Commerce
+    userJourneys:
+      - id: checkout
+        title: Complete checkout
+        actor: shopper
+        scenarios:
+          - id: checkout.calculate-total
+            title: Calculate a quantity-based order total
+            criticality: high
+            requirementRefs:
+              - REQ-PRICING-1
+            owners:
+              - pricing
+            tags:
+              - unit
+            codePaths:
+              - packages/math-core/src/index.ts
+          - id: checkout.view-summary
+            title: View the calculated checkout summary
+            criticality: critical
+            requirementRefs:
+              - REQ-CHECKOUT-1
+            owners:
+              - storefront
+            tags:
+              - smoke
+              - e2e
+            codePaths:
+              - apps/store-app/src/pricing.ts
