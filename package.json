@@ -1,7 +1,7 @@
 {
   "name": "playwright-codegraph",
   "version": "0.1.0",
-  "description": "Codegraph-powered affected unit and Playwright test selection for Rush monorepos",
+  "description": "Deterministic scenario coverage and code-change-based unit and Playwright test selection",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deepakkamboj/playwright-codegraph.git"
@@ -39,7 +39,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node scripts/run-tests.mjs",
     "lint": "eslint src test",
-    "check": "npm run typecheck && npm test && npm run lint && npm run build"
+    "check": "npm run typecheck && npm test && npm run lint && npm run build",
+    "docs:dev": "npm --prefix docs run dev",
+    "docs:build": "npm --prefix docs run build",
+    "docs:typecheck": "npm --prefix docs run typecheck"
   },
   "dependencies": {
     "minimatch": "^10.1.1",
@@ -65,7 +68,11 @@
     "rush",
     "codegraph",
     "affected-tests",
-    "test-selection"
+    "test-selection",
+    "scenario-coverage",
+    "test-impact-analysis",
+    "monorepo",
+    "continuous-integration"
   ],
   "license": "MIT"
 }

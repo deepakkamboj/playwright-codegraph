@@ -1,0 +1,81 @@
+---
+title: Affected-Test Selection
+---
+
+# Affected-Test Selection
+
+The planner maps a Git change set to a safe unit and Playwright test plan.
+
+## Selection Pipeline
+
+1. Calculate the protected merge base.
+2. Collect committed, staged, unstaged, renamed, deleted, and configured
+   untracked changes.
+3. Find owning Rush projects and reverse dependents.
+4. Ask CodeGraph for statically affected tests.
+5. Apply explicit mappings and scenario coverage edges.
+6. Add configured core and smoke safety tests.
+7. Evaluate fail-open conditions and limits.
+8. Write a canonical, fingerprinted plan.
+
+## Selection Reasons
+
+Each test records why it was included:
+
+- `changed-test`
+- `codegraph-reachable`
+- `covers`
+- `mapping`
+- `core-safety`
+- `smoke-safety`
+- Project ownership and dependent-project expansion
+
+Use `explain` for one changed file:
+
+```bash
+npx playwright-codegraph explain packages/cart/src/quantity.ts
+```
+
+## Pull Request Execution
+
+```bash
+git fetch origin main
+npx playwright-codegraph graph sync
+npx playwright-codegraph scenarios
+npx playwright-codegraph plan --base origin/main
+npx playwright-codegraph run
+```
+
+## Authoritative Full Execution
+
+Protected branches, scheduled runs, and releases can create an explicit full
+plan:
+
+```bash
+npx playwright-codegraph plan --base HEAD --full
+npx playwright-codegraph run
+```
+
+The plan records `manual-full-run`, inventories every test, and uses each
+runner's configured `fullArgs`.
+
+## Shadow Mode
+
+Shadow mode compares selective execution with an authoritative full run:
+
+```bash
+npx playwright-codegraph shadow --base origin/main
+```
+
+Use shadow records before making selective execution a required pull request
+gate. Replay retained records to calculate fallback and missed-failure counts:
+
+```bash
+npx playwright-codegraph replay --records test-selection-history
+```
+
+## Safety Guarantee
+
+CodeGraph guarantees deterministic selection for identical inputs and explicit
+full-suite fallback when evidence is incomplete. It does not claim that
+applications, browsers, networks, or tests are inherently deterministic.

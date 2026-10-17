@@ -1,0 +1,163 @@
+---
+title: Getting Started
+---
+
+import { PackageInstall } from "../components/PackageInstall";
+import { FileStructure } from "../components/FileStructure";
+
+# Getting Started
+
+Create your first deterministic affected-test plan and standalone quality report.
+
+## Requirements
+
+- Node.js 20 or 22
+- Git history containing the pull request base
+- A Rush TypeScript repository
+- Existing unit tests, Playwright tests, or both
+
+Rush is the currently implemented workspace adapter. npm, pnpm, and Yarn workspace
+auto-detection remain on the product roadmap.
+
+## 1. Install the CLI and Graph Engine
+
+<PackageInstall packages={["playwright-codegraph", "@colbymchenry/codegraph"]} dev />
+
+`@colbymchenry/codegraph` is a required peer dependency. CodeGraph invokes its
+JavaScript entry point directly, which keeps execution shell-free on Windows and Linux.
+
+## 2. Add the Configuration
+
+Create `playwright-codegraph.config.json` in the repository root:
+
+```json
+{
+  "baseRef": "origin/main",
+  "includeUntracked": true,
+  "unitTestGlobs": ["**/src/**/*.test.{ts,tsx}"],
+  "playwrightTestGlobs": ["apps/e2e/tests/**/*.spec.ts"],
+  "coreTestGlobs": ["apps/e2e/tests/core/**/*.spec.ts"],
+  "smokeTestGlobs": ["apps/e2e/tests/**/*.smoke.spec.ts"],
+  "projectDependentDepth": 1,
+  "globalTriggers": ["rush.json", "common/config/**", "playwright.config.ts"],
+  "scenarios": {
+    "registry": "test-scenarios.yml",
+    "requireRuntimeEvidence": false
+  },
+  "unit": {
+    "executable": "npx",
+    "args": ["vitest", "run", "{files}"],
+    "fullArgs": ["vitest", "run"],
+    "maxArgumentCharacters": 20000
+  },
+  "playwright": {
+    "executable": "npx",
+    "args": ["playwright", "test", "{files}"],
+    "fullArgs": ["playwright", "test"],
+    "maxArgumentCharacters": 20000
+  }
+}
+```
+
+Unknown configuration keys fail validation. Ambiguous impact never becomes an
+unexplained empty plan.
+
+## 3. Define a Scenario Registry
+
+Create `test-scenarios.yml`:
+
+```yaml
+schemaVersion: 1
+customerJourneys:
+  - id: commerce
+    title: Commerce
+    userJourneys:
+      - id: checkout
+        title: Complete checkout
+        actor: shopper
+        scenarios:
+          - id: checkout.calculate-total
+            title: Calculate a standard order total
+            criticality: high
+            requirementRefs: [REQ-PRICING-1]
+            owners: [pricing]
+            tags: [positive]
+            codePaths:
+              - packages/pricing/src/**
+          - id: checkout.view-summary
+            title: View the checkout summary
+            dependsOn: [checkout.calculate-total]
+            criticality: critical
+            requirementRefs: [REQ-CHECKOUT-1]
+            owners: [storefront]
+            tags: [happy-path, smoke]
+            codePaths:
+              - apps/store/src/checkout/**
+```
+
+Link tests with stable annotations:
+
+```ts
+test("shopper views the checkout summary @scenario:checkout.view-summary", async ({ page }) => {
+  // Assert the observable customer outcome.
+});
+```
+
+## 4. Build and Validate the Graph
+
+```bash
+npx playwright-codegraph graph build
+npx playwright-codegraph doctor
+npx playwright-codegraph scenarios
+```
+
+Use `graph sync` after the initial build:
+
+```bash
+npx playwright-codegraph graph sync
+```
+
+## 5. Plan and Run Affected Tests
+
+```bash
+git fetch origin main
+npx playwright-codegraph plan --base origin/main
+npx playwright-codegraph run
+```
+
+The selector writes `test-selection-out/plan.json`. Every selected test includes
+one or more stable reason codes.
+
+## 6. Generate the Report
+
+```bash
+npx playwright-codegraph report --title "Pull Request Quality"
+```
+
+Open `test-selection-out/codegraph-report.html`. The standalone report needs no
+server, stylesheet, JavaScript bundle, or network connection.
+
+## Generated Artifacts
+
+<FileStructure
+  items={[
+    {
+      name: "test-selection-out/",
+      type: "folder",
+      description: "deterministic quality evidence",
+      children: [
+        { name: "plan.json", type: "file", description: "changed files, selected tests, and reasons" },
+        { name: "scenario-coverage.json", type: "file", description: "machine-readable scenario evidence" },
+        { name: "scenario-coverage.md", type: "file", description: "human-readable scenario matrix" },
+        { name: "execution.json", type: "file", description: "runner commands and exit codes" },
+        { name: "codegraph-report.html", type: "file", description: "standalone interactive dashboard" },
+      ],
+    },
+  ]}
+/>
+
+## Next Steps
+
+- Read [Scenarios & Journeys](/scenarios) to model negative, edge, and corner cases.
+- Read [Affected-Test Selection](/selection) to understand safety expansion.
+- Read [Quality Reports](/reporting) to publish CI evidence.
