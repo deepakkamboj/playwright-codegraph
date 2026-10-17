@@ -8,7 +8,7 @@ customerJourneys:
         actor: shopper
         scenarios:
           - id: checkout.calculate-total
-            title: Calculate a quantity-based order total
+            title: Calculate a standard order total
             criticality: high
             requirementRefs:
               - REQ-PRICING-1
@@ -16,17 +16,65 @@ customerJourneys:
               - pricing
             tags:
               - unit
+              - positive
             codePaths:
               - packages/math-core/src/index.ts
           - id: checkout.view-summary
             title: View the calculated checkout summary
+            dependsOn:
+              - checkout.calculate-total
             criticality: critical
             requirementRefs:
               - REQ-CHECKOUT-1
             owners:
               - storefront
             tags:
+              - happy-path
               - smoke
               - e2e
             codePaths:
+              - apps/store-app/src/pricing.ts
+          - id: checkout.reject-invalid-quantity
+            title: Reject an invalid cart quantity
+            dependsOn:
+              - checkout.calculate-total
+            criticality: high
+            requirementRefs:
+              - REQ-PRICING-2
+            owners:
+              - pricing
+            tags:
+              - negative
+              - validation
+            codePaths:
+              - packages/math-core/src/index.ts
+          - id: checkout.round-fractional-total
+            title: Round fractional currency to cents
+            dependsOn:
+              - checkout.calculate-total
+            criticality: medium
+            requirementRefs:
+              - REQ-PRICING-3
+            owners:
+              - pricing
+            tags:
+              - edge
+              - precision
+            codePaths:
+              - packages/math-core/src/index.ts
+          - id: checkout.maximum-supported-cart
+            title: Calculate a very large cart
+            dependsOn:
+              - checkout.round-fractional-total
+            criticality: medium
+            requirementRefs:
+              - REQ-PRICING-4
+            owners:
+              - pricing
+              - storefront
+            tags:
+              - corner
+              - scale
+            codePaths:
+              - packages/math-core/src/index.ts
               - apps/store-app/src/pricing.ts

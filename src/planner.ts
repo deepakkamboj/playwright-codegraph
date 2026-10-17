@@ -13,6 +13,7 @@ export interface PlanOptions {
   readonly root: string;
   readonly configPath?: string;
   readonly baseRef?: string;
+  readonly forceFull?: boolean;
 }
 
 export async function createPlan(options: PlanOptions): Promise<SelectionPlan> {
@@ -69,6 +70,7 @@ export async function createPlan(options: PlanOptions): Promise<SelectionPlan> {
       codegraphAffectedTests: affected,
       scenarios,
       scenarioCoverageGaps: scenarioCoverage.gaps,
+      ...(options.forceFull ? { forceFull: true } : {}),
     });
   } catch (error) {
     return await fallbackPlan(options.root, baseRef, config, reasonFor(error));

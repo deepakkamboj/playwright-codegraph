@@ -8,6 +8,7 @@ import { CliCodegraphAdapter } from './codegraph.js';
 import { loadConfig } from './config.js';
 import { executePlan } from './executor.js';
 import { listRepositoryFiles } from './git.js';
+import { generateHtmlReport } from './html-report.js';
 import { createPlan } from './planner.js';
 import { scenarioCoverageMarkdown } from './reports.js';
 import { replayShadowRecords } from './replay.js';
@@ -34,6 +35,7 @@ try {
       root,
       ...(configPath ? { configPath } : {}),
       ...(baseRef ? { baseRef } : {}),
+      forceFull: Boolean(args.full),
     });
     write(value(args, 'out') ?? path.join(root, 'test-selection-out', 'plan.json'), canonicalJson(plan));
     console.error(`${plan.mode.toUpperCase()}: ${plan.tests.length} tests; ${plan.fullRunReasons.length} fallback reasons`);
@@ -52,6 +54,16 @@ try {
     console.log(`codegraph ${await adapter.getVersion()}`);
     await adapter.status();
     console.log('codegraph index: ready');
+  } else if (command === 'report') {
+    const artifactDirectory = path.resolve(root, value(args, 'artifacts') ?? 'test-selection-out');
+    const outputFile = path.resolve(root, value(args, 'out') ?? 'test-selection-out/codegraph-report.html');
+    const title = value(args, 'title');
+    generateHtmlReport({
+      artifactDirectory,
+      outputFile,
+      ...(title ? { title } : {}),
+    });
+    console.log(`HTML report: ${outputFile}`);
   } else if (command === 'shadow') {
     const config = loadConfig(root, configPath);
     const baseRef = value(args, 'base');
@@ -124,9 +136,10 @@ try {
     console.log(`playwright-codegraph
 
 Commands:
-  plan [--root path] [--base ref] [--config file] [--out file]
+  plan [--root path] [--base ref] [--config file] [--out file] [--full]
   run [--root path] [--config file] [--plan file] [--out file]
   doctor [--root path] [--config file]
+  report [--root path] [--artifacts directory] [--out file] [--title text]
   shadow [--root path] [--base ref] [--out file]
   replay [--root path] [--records directory] [--out file]
   explain <file> [--root path] [--config file]
